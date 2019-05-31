@@ -13,10 +13,10 @@ public class MainGameFunction : MonoBehaviour
     float time_f = 0f;
     int time = 0;
     int score = 0;
-    int flag = 1;//判斷是否運作
     // Start is called before the first frame update
     void Start()
     {
+        GlobalVars.MainGameStop = 0;
         RestartButton.SetActive(false);
         QuitButton.SetActive(false);
         ResumeButton.SetActive(false);
@@ -30,9 +30,9 @@ public class MainGameFunction : MonoBehaviour
             RestartButton.SetActive(true);
             QuitButton.SetActive(true);
             ResumeButton.SetActive(true);
-            flag = 0;
+            GlobalVars.MainGameStop = 1;
         }
-        if (flag == 1)
+        if (GlobalVars.MainGameStop == 0)
         {
             time_f += Time.deltaTime;
             time = 60 - (int)time_f;
@@ -42,14 +42,14 @@ public class MainGameFunction : MonoBehaviour
     }
     public void Resume()//resume的功能
     {
-        flag = 1;
+        GlobalVars.MainGameStop = 0;
         RestartButton.SetActive(false);
         QuitButton.SetActive(false);
         ResumeButton.SetActive(false);
     }
     public void Restart()//restart button的功能
     {
-        flag = 1;
+        GlobalVars.MainGameStop = 0;
         RestartButton.SetActive(false);
         QuitButton.SetActive(false);
         ResumeButton.SetActive(false);
