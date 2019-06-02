@@ -17,7 +17,12 @@ public class ManagerMasquito : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if(curMasquito < MaxMasquito)
+        GlobalVars.lastCursorPosition = GlobalVars.cursorPosition;
+        GlobalVars.cursorPosition = Input.mousePosition;
+        GlobalVars.cursorPosition.z = 20;
+        GlobalVars.cursorPosition = Camera.main.ScreenToWorldPoint(GlobalVars.cursorPosition);
+
+        if (curMasquito < MaxMasquito)
         {
             Masquitos[curMasquito] =Instantiate( MasquitoExample, new Vector3(3, 3, 0),MasquitoExample.transform.rotation);
             Masquitos[curMasquito].SetActive( true);

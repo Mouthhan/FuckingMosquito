@@ -13,6 +13,12 @@ public class MainGameFunction : MonoBehaviour
     float time_f = 0f;
     int time = 0;
     int score = 0;
+
+    //item
+    public GameObject[] items = new GameObject[10];
+    public double[] itemsEffectDistanceList = new double[10];
+    public int[] itemsEffectTime = new int[10];
+    
     // Start is called before the first frame update
     void Start()
     {
@@ -20,8 +26,11 @@ public class MainGameFunction : MonoBehaviour
         RestartButton.SetActive(false);
         QuitButton.SetActive(false);
         ResumeButton.SetActive(false);
-    }
 
+        //initialize item effect
+        itemsEffectDistanceList[0] = 3;
+        items[0].SetActive(false);
+    }
     // Update is called once per frame
     void Update()
     {
@@ -39,6 +48,14 @@ public class MainGameFunction : MonoBehaviour
             SetTime();
             AddScore();
         }
+        if(time % 10 == 0 && time < 60)
+        {
+            GlobalVars.itemUsedIndex = 0;
+            GlobalVars.itemIsUsed = true;
+            items[GlobalVars.itemUsedIndex].SetActive(true);
+            GlobalVars.itemEffectDistance = itemsEffectDistanceList[GlobalVars.itemUsedIndex];
+        }
+
     }
     public void Resume()//resume的功能
     {
@@ -62,7 +79,6 @@ public class MainGameFunction : MonoBehaviour
         TextTime.text = "Time: ";
         TextTime.text += time.ToString();
     }
-
     public void AddScore()//加分
     {
         score += 10;
