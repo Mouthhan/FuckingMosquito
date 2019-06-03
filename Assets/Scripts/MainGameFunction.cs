@@ -7,16 +7,22 @@ public class MainGameFunction : MonoBehaviour
 {
     public Text TextTime;
     public Text TextScore;
+    public Text CountDown;
+    public GameObject CountDownText;
     public GameObject RestartButton;
     public GameObject QuitButton;
     public GameObject ResumeButton;
+    public GameObject OverText;
     float time_f = 0f;
-    int time = 0;
+    int time = -1;
+    float time_c = 0f;//倒數
+    int count_down = -1;
     int score = 0;
     // Start is called before the first frame update
     void Start()
     {
         GlobalVars.MainGameStop = 0;
+        OverText.SetActive(false);
         RestartButton.SetActive(false);
         QuitButton.SetActive(false);
         ResumeButton.SetActive(false);
@@ -39,10 +45,35 @@ public class MainGameFunction : MonoBehaviour
             SetTime();
             AddScore();
         }
+        if(time==0)
+        {
+            GlobalVars.MainGameStop = 1;
+            OverText.SetActive(true);
+            RestartButton.SetActive(true);
+            QuitButton.SetActive(true);
+        }
+        if (count_down != -1)
+        {
+            if (count_down == 0)//執行
+            {
+                GlobalVars.MainGameStop = 0;
+                CountDown.text = "";
+                time_c = 0f;
+                count_down = -1;
+            }
+            else
+            {
+                time_c += Time.deltaTime;
+                count_down = 3 - (int)time_c;
+                CountDown.text = count_down.ToString();
+            }
+        }
+        
     }
     public void Resume()//resume的功能
     {
-        GlobalVars.MainGameStop = 0;
+        // GlobalVars.MainGameStop = 0;
+        count_down = 3;
         RestartButton.SetActive(false);
         QuitButton.SetActive(false);
         ResumeButton.SetActive(false);
