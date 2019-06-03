@@ -86,4 +86,16 @@ public class MoveWithRightHand : MonoBehaviour
 
         position = transform.position;
     }
+
+
+    void OnTriggerEnter2D(Collider2D other)
+    {
+        Debug.Log(other.gameObject.tag);
+        if(other.gameObject.tag == "item")
+        {
+            GlobalVars.itemIsUsed = true;
+            GlobalVars.itemEffectDistance = 3;
+            GlobalVars.itemUsingTime = 2;
+        }
+    }
 }

@@ -18,6 +18,8 @@ public class MainGameFunction : MonoBehaviour
     public GameObject[] items = new GameObject[10];
     public double[] itemsEffectDistanceList = new double[10];
     public int[] itemsEffectTime = new int[10];
+    public double itemExistTime = 0;
+    //public double itemUsingTime = 0;
     
     // Start is called before the first frame update
     void Start()
@@ -48,14 +50,51 @@ public class MainGameFunction : MonoBehaviour
             SetTime();
             AddScore();
         }
-        if(time % 10 == 0 && time < 60)
+        //item appear.
+        if(time % 5 == 0 && time < 60)
         {
             GlobalVars.itemUsedIndex = 0;
-            GlobalVars.itemIsUsed = true;
+            GlobalVars.itemIsUsed = false;
             items[GlobalVars.itemUsedIndex].SetActive(true);
             GlobalVars.itemEffectDistance = itemsEffectDistanceList[GlobalVars.itemUsedIndex];
+            itemExistTime = 2;
         }
-
+        //item is used.
+        if(GlobalVars.itemUsedIndex > -1){
+            if(GlobalVars.itemIsUsed)
+            {
+                items[GlobalVars.itemUsedIndex].transform.position = GlobalVars.cursorPosition;
+                if(GlobalVars.itemUsingTime > 0)
+                {
+                    Debug.Log("Using");
+                    GlobalVars.itemUsingTime -= Time.deltaTime;
+                }
+                else
+                {
+                    Debug.Log("Not Using");
+                    items[GlobalVars.itemUsedIndex].SetActive(false);
+                    GlobalVars.itemIsUsed = false;
+                    GlobalVars.itemEffectDistance = 0;
+                    GlobalVars.itemUsedIndex = -1;
+                }
+            }
+            //still didn't get item
+            else
+            {
+                if(itemExistTime > 0)
+                {
+                    itemExistTime -= Time.deltaTime;
+                }
+                //didn't get item, let it disappear
+                else
+                {
+                    items[GlobalVars.itemUsedIndex].SetActive(false);
+                    GlobalVars.itemIsUsed = false;
+                    GlobalVars.itemEffectDistance = 0;
+                    GlobalVars.itemUsedIndex = -1;
+                }
+            }
+        }
     }
     public void Resume()//resume的功能
     {

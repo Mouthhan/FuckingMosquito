@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System;
 using UnityEngine;
-
+ 
 public class GlobalVars : MonoBehaviour
 {
    
@@ -17,6 +17,7 @@ public class GlobalVars : MonoBehaviour
     public static int itemUsedIndex = -1;
     public static bool itemIsUsed = false;
     public static double itemEffectDistance = 0;
+    public static double itemUsingTime = 0;
     //// Start is called before the first frame update
     //void Start()
     //{

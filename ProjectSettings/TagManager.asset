@@ -3,7 +3,8 @@
 --- !u!78 &1
 TagManager:
   serializedVersion: 2
-  tags: []
+  tags:
+  - item
   layers:
   - Default
   - TransparentFX
@@ -44,6 +45,9 @@ TagManager:
   - name: GameObj
     uniqueID: 2341122315
     locked: 0
-  - name: Player
+  - name: player
     uniqueID: 3736298719
+    locked: 0
+  - name: item
+    uniqueID: 1326615287
     locked: 0

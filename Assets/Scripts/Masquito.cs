@@ -116,7 +116,6 @@ public class Masquito : MonoBehaviour
 
         if(GlobalVars.itemUsedIndex > -1 && GlobalVars.itemIsUsed && inItemEffectDistance())
         {
-            Debug.Log("fucking weed");
             foo[GlobalVars.itemUsedIndex]();
         }
         else if (isDangerous3())
