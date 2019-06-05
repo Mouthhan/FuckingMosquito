@@ -28,7 +28,7 @@ public class PlayerController : MonoBehaviour
     // Mouse Position
     Vector3 mousePos;
 
-    static readonly bool DEBUG = false;
+    static readonly bool DEBUG = true;
 
     void Start()
     {
