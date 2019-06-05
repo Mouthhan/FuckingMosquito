@@ -1,77 +1,147 @@
 ﻿using UnityEngine;
 using System.Collections;
+using UnityEngine.UI;
 using Windows.Kinect;
 
 public class BodySourceManager : MonoBehaviour 
 {
-    private KinectSensor _Sensor;
-    private BodyFrameReader _Reader;
-    private Body[] _Bodies = null;
-    private CoordinateMapper _Coordinate;
+    public Text Debug0;
+    public Text Debug1;
+    public Text Debug2;
+    public Text Debug3;
+    public Text Debug4;
+    public Text Debug5;
 
-    public Body[] GetBodies()
-    {
-        return _Bodies;
-    }
-
-    public CoordinateMapper GetCoordinate()
-    {
-        return _Coordinate;
-    }    
+    KinectSensor sensor;
+    BodyFrameReader reader;
+    Body[] bodies = null;
+    CoordinateMapper coordinate;
 
     void Start () 
     {
-        _Sensor = KinectSensor.GetDefault();
+        sensor = KinectSensor.GetDefault();
 
-        if (_Sensor != null)
+        if (sensor != null)
         {
-            _Reader = _Sensor.BodyFrameSource.OpenReader();
+            reader = sensor.BodyFrameSource.OpenReader();
+            reader.FrameArrived += new System.EventHandler<BodyFrameArrivedEventArgs>(Reader_UpdateBodies);
             
-            if (!_Sensor.IsOpen)
+            if (!sensor.IsOpen)
             {
-                _Sensor.Open();
+                sensor.Open();
             }
 
-            _Coordinate = _Sensor.CoordinateMapper;
+            coordinate = sensor.CoordinateMapper;
         }   
     }
     
     void Update () 
-    {
-        if (_Reader != null)
-        {
-            var frame = _Reader.AcquireLatestFrame();
-            if (frame != null)
-            {
-                if (_Bodies == null)
-                {
-                    _Bodies = new Body[_Sensor.BodyFrameSource.BodyCount];
-                }
-                
-                frame.GetAndRefreshBodyData(_Bodies);
-                
-                frame.Dispose();
-                frame = null;
-            }
-        }    
+    { 
     }
-    
+
+    /* Events */
+    void Reader_UpdateBodies(object sender, BodyFrameArrivedEventArgs e)
+    {
+        using (BodyFrame bodyFrame = e.FrameReference.AcquireFrame())
+        {
+            if (bodyFrame != null)
+            {
+                if (bodies == null)
+                {
+                    bodies = new Body[bodyFrame.BodyCount];
+                }
+
+                bodyFrame.GetAndRefreshBodyData(bodies);
+                
+                for (int i = 0; i < bodyFrame.BodyCount; ++i)
+                {
+                    if (bodies[i] == null)
+                    {
+                        Debug.Log("bodies[" + i.ToString() + "] == null");
+                        continue;
+                    }
+
+                    if (bodies[i].IsTracked)
+                    {
+                        switch (i)
+                        {
+                            case 0:
+                                Debug0.text = "1";
+                                break;
+                            case 1:
+                                Debug1.text = "1";
+                                break;
+                            case 2:
+                                Debug2.text = "1";
+                                break;
+                            case 3:
+                                Debug3.text = "1";
+                                break;
+                            case 4:
+                                Debug4.text = "1";
+                                break;
+                            case 5:
+                                Debug5.text = "1";
+                                break;
+                        }
+                    }
+                    else
+                    {
+                        switch (i)
+                        {
+                            case 0:
+                                Debug0.text = "0";
+                                break;
+                            case 1:
+                                Debug1.text = "0";
+                                break;
+                            case 2:
+                                Debug2.text = "0";
+                                break;
+                            case 3:
+                                Debug3.text = "0";
+                                break;
+                            case 4:
+                                Debug4.text = "0";
+                                break;
+                            case 5:
+                                Debug5.text = "0";
+                                break;
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    /* Access Functions */
+    public Body[] GetBodies()
+    {
+        return bodies;
+    }
+
+    public CoordinateMapper GetCoordinate()
+    {
+        return coordinate;
+    }
+
+    /* Other Functions */
     void OnApplicationQuit()
     {
-        if (_Reader != null)
+        if (reader != null)
         {
-            _Reader.Dispose();
-            _Reader = null;
+            reader.Dispose();
+            reader = null;
         }
         
-        if (_Sensor != null)
+        if (sensor != null)
         {
-            if (_Sensor.IsOpen)
+            if (sensor.IsOpen)
             {
-                _Sensor.Close();
+                sensor.Close();
             }
             
-            _Sensor = null;
+            sensor = null;
         }
     }
 }
