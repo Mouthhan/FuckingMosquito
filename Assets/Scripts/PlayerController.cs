@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
+using System.Collections.Generic;
 using Kinect = Windows.Kinect;
 
 public class PlayerController : MonoBehaviour
@@ -29,8 +30,10 @@ public class PlayerController : MonoBehaviour
     Vector3 mousePos;
 
     //animator
-    //Animator m_animator;
-    
+    Animator m_animator;
+
+    Dictionary<int, Mosquito> DestroyList = new Dictionary<int, Mosquito>();
+
     static readonly bool DEBUG = false;
 
     void Start()
@@ -51,8 +54,8 @@ public class PlayerController : MonoBehaviour
             coordinate = bodyManager.GetCoordinate();
         }
         // for animation
-        //m_animator = gameObject.GetComponent<Animator>();
-        //m_animator.SetBool("handclose", false);
+        m_animator = gameObject.GetComponent<Animator>();
+        m_animator.SetBool("handclosebool", false);
     }
 
     // Update is called once per frame
@@ -100,18 +103,18 @@ public class PlayerController : MonoBehaviour
             {
                 isHandRightClosed = true;
 
-                //m_animator.SetBool("handclose", true);
+                m_animator.SetBool("handclosebool", true);
                 
-                spriteRenderer.sprite = Resources.Load<Sprite>("newhandclose");
+                //spriteRenderer.sprite = Resources.Load<Sprite>("newhandclose");
                 //transform.localScale = new Vector3(3, 3, 1);
             }
             else if (bodies[bodyID].HandRightState != Kinect.HandState.Closed && isHandRightClosed)
             {
                 isHandRightClosed = false;
 
-                //m_animator.SetBool("handclose", false);
+                m_animator.SetBool("handclosebool", false);
 
-                spriteRenderer.sprite = Resources.Load<Sprite>("newhand");
+                //spriteRenderer.sprite = Resources.Load<Sprite>("newhand");
                 //transform.localScale = new Vector3(0.5f, 0.5f, 1);
             }
 
@@ -129,14 +132,39 @@ public class PlayerController : MonoBehaviour
     }
 
 
-    void OnTriggerEnter2D(Collider2D other)
+    void OnTriggerEnter2D(Collider2D ColliderObj)
     {
         // Debug.Log(other.gameObject.tag);
-        if(other.gameObject.tag == "item")
+        if(ColliderObj.gameObject.tag == "item")
         {
             GlobalVars.itemIsUsed = true;
             GlobalVars.itemEffectDistance = 3;
             GlobalVars.itemUsingTime = 2;
+        }
+        else if (ColliderObj.gameObject.tag == "Mosquito")
+        {
+            if (isHandRightClosed == true)
+            {
+                Mosquito ms = ColliderObj.gameObject.GetComponent<Mosquito>();
+                // if (!DestroyList.ContainsKey(ms.mosquitoIndex)) DestroyList.Add(ms.mosquitoIndex, ms);
+            }
+        }
+    }
+
+    public void Kill()
+    {
+        foreach (KeyValuePair<int, Mosquito> entry in DestroyList)
+        {
+            entry.Value.Kill();
+        }
+        DestroyList.Clear();
+    }
+
+    void OnTriggerLeave2D(Collider2D ColliderObj)
+    {
+        if (ColliderObj.gameObject.tag == "Mosquito")
+        {
+            // DestroyList.Remove(ColliderObj.gameObject.GetComponent<Mosquito>().mosquitoIndex);
         }
     }
 }

@@ -59,7 +59,6 @@ public class Mosquito : MonoBehaviour
     private double deathAniLength;
 
     //Mosquito Informations
-    public int mosquitoIndex;
     private  bool alive;
 
     //ManagerMosquito Dependencies.
@@ -97,7 +96,7 @@ public class Mosquito : MonoBehaviour
             {
                 Debug.Log("Mosquito Distroyed");
                 Destroy(gameObject);
-                GameObject.Find("MosquitoGenerator").GetComponent<ManagerMosquito>().Destroy(mosquitoIndex);
+                GameObject.Find("MosquitoGenerator").GetComponent<ManagerMosquito>().Destroy();
             }
             return;
         }
@@ -253,7 +252,7 @@ public class Mosquito : MonoBehaviour
 
     bool Dangerous3()
     {
-        cursor = MoveWithRightHand.position ;
+        cursor = PlayerController.position ;
         cursor.z = 20;
         //cursor = Camera.main.ScreenToWorldPoint(cursor);
         Vector3 pos = transform.position;

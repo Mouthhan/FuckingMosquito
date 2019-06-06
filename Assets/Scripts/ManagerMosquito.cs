@@ -16,9 +16,8 @@ public class ManagerMosquito : MonoBehaviour
 
     }
 
-    public void Destroy(int index)
+    public void Destroy()
     {
-        //NextMosquitoIndex.Enqueue(index);
         curMosquito -= 1;
     }
 
