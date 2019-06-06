@@ -31,6 +31,19 @@ public class MoveWithRightHand : MonoBehaviour
             // Mouse Mode
             Vector3 mp = Camera.main.ScreenToWorldPoint(Input.mousePosition);
             transform.position = new Vector3(mp.x, mp.y);
+
+            if (Input.GetMouseButtonDown(0))
+            {
+                if (!isHandRightClosed)
+                {
+                    isHandRightClosed = true;
+                    GetComponent<HandTrigger>().Kill();
+                }
+            }
+            else if (Input.GetMouseButtonUp(0))
+            {
+                isHandRightClosed = false;
+            }
         }
         else
         {
@@ -76,6 +89,7 @@ public class MoveWithRightHand : MonoBehaviour
                 }
                 else if (bodies[0].HandRightState != Kinect.HandState.Closed && isHandRightClosed)
                 {
+
                     // TextIsClosed.text = "False";
                     isHandRightClosed = false;
                     _SpriteRenderer.sprite = Resources.Load<Sprite>("#zpay");

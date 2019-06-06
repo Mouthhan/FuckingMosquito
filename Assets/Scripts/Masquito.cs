@@ -46,18 +46,23 @@ public class Masquito : MonoBehaviour
 
 
     //Dangerous Dependencies
-    public Vector3 lastCursorPosition = new Vector3(1000,1000, 10);
-    public Vector3 cursor;
+    private Vector3 lastCursorPosition = new Vector3(1000,1000, 10);
+    private Vector3 cursor;
     private double dangerous3Position = 3;
-    public double distance;
-    public bool lastDangerous;
-    public Sprite spriteOrigin;
-    public Sprite spriteDangerous;
+    private double distance;
+    private bool lastDangerous;
 
 
     //Animation Dependencies
-    Animator m_animator;
+    private Animator m_animator;
+    private double deathAniLength;
 
+    //Masquito Informations
+    public int mosquitoIndex;
+    private  bool alive;
+
+    //ManagerMosquito Dependencies.
+    ManagerMasquito mosManager;
 
     // Start is called before the first frame update
     void Start()
@@ -67,6 +72,7 @@ public class Masquito : MonoBehaviour
         newSpeed = 0.1f;
         deltaSpeed = newSpeed - speed;
         AccuTime = 0;
+        alive = true;
         //Animation Setup
         m_animator = gameObject.GetComponent<Animator>();
         m_animator.SetBool("check", false);
@@ -75,82 +81,92 @@ public class Masquito : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (GlobalVars.MainGameStop == 1) {
+        if (GlobalVars.MainGameStop == 1)
+        {
             return;
         }
-
-
-        AccuTime += Time.deltaTime;
-
-        direction = CheckRadias(direction + deltadir);
-
-
-
-        //Movement
-         x = transform.position.x;
-         y = transform.position.y;
-        double deltaPortion = Time.deltaTime / transTime;
-
-        speed += deltaSpeed * deltaPortion;
-        deltadir += deltadeltadir * deltaPortion;
-
-        y += Mathf.Sin((float)direction) * speed * Time.deltaTime;
-        x += Mathf.Cos((float)direction) * speed * Time.deltaTime;
-
-        transform.position = new Vector3((float)x,(float)y, transform.position.z);
-
-        if (direction > PI/2.0 && direction <  1.5*PI)
+        else if (!alive)
         {
-            transform.localScale = new Vector3(1, transform.localScale.y, transform.localScale.z);
-            //transform.eulerAngles = new Vector3(0, 0, (float)((direction * 180 / PI)-PI));
-            transform.eulerAngles = new Vector3(0, 0, 0);
+            //yield return new WaitForSeconds(5);
+            deathAniLength -= Time.deltaTime;
+            if(deathAniLength < 0)
+            {
+                Debug.Log("Mosquito Distroyed");
+                Destroy(gameObject);
+                GameObject.Find("MosquitoGenerator").GetComponent<ManagerMasquito>().Destroy(mosquitoIndex);
+            }
+            return;
         }
         else
         {
-            transform.localScale = new Vector3(-1, transform.localScale.y, transform.localScale.z);
-            // transform.eulerAngles = new Vector3(0, 0, (float)(direction * 180 / PI));
-            transform.eulerAngles = new Vector3(0, 0, 0);
-        }
+            AccuTime += Time.deltaTime;
 
-        if (Dangerous3())
-        {
-            if (!lastDangerous)
+            direction = CheckRadias(direction + deltadir);
+
+
+
+            //Movement
+            x = transform.position.x;
+            y = transform.position.y;
+            double deltaPortion = Time.deltaTime / transTime;
+
+            speed += deltaSpeed * deltaPortion;
+            deltadir += deltadeltadir * deltaPortion;
+
+            y += Mathf.Sin((float)direction) * speed * Time.deltaTime;
+            x += Mathf.Cos((float)direction) * speed * Time.deltaTime;
+
+            transform.position = new Vector3((float)x, (float)y, transform.position.z);
+
+            if (direction > PI / 2.0 && direction < 1.5 * PI)
             {
-                GetComponent<SpriteRenderer>().sprite = spriteDangerous;
-                ChangeToDangerous3();
-            }
-            lastDangerous = true;
-        }
-        else if (lastDangerous)
-        {
-            lastDangerous = false;
-            GetComponent<SpriteRenderer>().sprite = spriteOrigin;
-            ChangeToNormal();
-        }
-        else  if (AccuTime >= moveDuration )
-        {
-            //Arrange New Behavior
-            AccuTime = 0;
-            if (Math.Pow(x * x + y * y, 0.5) > GoBackDistance)
-            {  //Too far away from the center point
-                //Try to stay close to the center point
-                GoCenterBehavior();
+                transform.localScale = new Vector3(1, transform.localScale.y, transform.localScale.z);
+                //transform.eulerAngles = new Vector3(0, 0, (float)((direction * 180 / PI)-PI));
+                transform.eulerAngles = new Vector3(0, 0, 0);
             }
             else
             {
-                NormalBehavior();
+                transform.localScale = new Vector3(-1, transform.localScale.y, transform.localScale.z);
+                // transform.eulerAngles = new Vector3(0, 0, (float)(direction * 180 / PI));
+                transform.eulerAngles = new Vector3(0, 0, 0);
             }
 
-            if (newSpeed > maxSpeed) newSpeed = maxSpeed;
-            deltaSpeed = newSpeed - speed;
+            if (Dangerous3())
+            {
+                if (!lastDangerous)
+                {
+                    ChangeToDangerous3();
+                }
+                lastDangerous = true;
+            }
+            else if (lastDangerous)
+            {
+                lastDangerous = false;
+                ChangeToNormal();
+            }
+            else if (AccuTime >= moveDuration)
+            {
+                //Arrange New Behavior
+                AccuTime = 0;
+                if (Math.Pow(x * x + y * y, 0.5) > GoBackDistance)
+                {  //Too far away from the center point
+                   //Try to stay close to the center point
+                    GoCenterBehavior();
+                }
+                else
+                {
+                    NormalBehavior();
+                }
 
-            if (newdeltadir > dirRangeRad) newdeltadir = dirRangeRad;
-            else if (newdeltadir < -dirRangeRad) newdeltadir = -dirRangeRad;
-            deltadeltadir = newdeltadir - deltadir;
+                if (newSpeed > maxSpeed) newSpeed = maxSpeed;
+                deltaSpeed = newSpeed - speed;
+
+                if (newdeltadir > dirRangeRad) newdeltadir = dirRangeRad;
+                else if (newdeltadir < -dirRangeRad) newdeltadir = -dirRangeRad;
+                deltadeltadir = newdeltadir - deltadir;
+            }
         }
     }
-
-
 
     private double CheckRadias(double rad)
     {
@@ -250,5 +266,16 @@ public class Masquito : MonoBehaviour
             return true;
 
         return false;
+    }
+
+    public  void Kill()
+    {
+        if (alive)
+        {
+            alive = false;
+            deathAniLength = 3;
+            //deathAniLength = m_animator
+        }
+       
     }
 }
