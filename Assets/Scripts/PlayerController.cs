@@ -28,12 +28,15 @@ public class PlayerController : MonoBehaviour
     // Mouse Position
     Vector3 mousePos;
 
-    static readonly bool DEBUG = true;
+    //animator
+    //Animator m_animator;
+    
+    static readonly bool DEBUG = false;
 
     void Start()
     {
         spriteRenderer = GetComponent<SpriteRenderer>();
-
+        
         if (!DEBUG)
         {
             // If there hasn't assigned BodySourceManager, byebye
@@ -47,6 +50,9 @@ public class PlayerController : MonoBehaviour
 
             coordinate = bodyManager.GetCoordinate();
         }
+        // for animation
+        //m_animator = gameObject.GetComponent<Animator>();
+        //m_animator.SetBool("handclose", false);
     }
 
     // Update is called once per frame
@@ -63,7 +69,11 @@ public class PlayerController : MonoBehaviour
             // Fetch Body[] Information every time update() called
             bodies = bodyManager.GetBodies();
 
-            if (bodyID == -1 || bodies[bodyID].IsTracked == false)
+            if (bodies == null)
+            {
+                bodyID = -1;
+            }
+            else if (bodyID == -1 || bodies[bodyID].IsTracked == false)
             {
                 // Finding a new bodyID
                 bodyID = -1;
@@ -89,14 +99,20 @@ public class PlayerController : MonoBehaviour
             if (bodies[bodyID].HandRightState == Kinect.HandState.Closed && !isHandRightClosed)
             {
                 isHandRightClosed = true;
-                spriteRenderer.sprite = Resources.Load<Sprite>("HandClose");
-                transform.localScale = new Vector3(3, 3, 1);
+
+                //m_animator.SetBool("handclose", true);
+                
+                spriteRenderer.sprite = Resources.Load<Sprite>("newhandclose");
+                //transform.localScale = new Vector3(3, 3, 1);
             }
             else if (bodies[bodyID].HandRightState != Kinect.HandState.Closed && isHandRightClosed)
             {
                 isHandRightClosed = false;
-                spriteRenderer.sprite = Resources.Load<Sprite>("HandOpen");
-                transform.localScale = new Vector3(0.5f, 0.5f, 1);
+
+                //m_animator.SetBool("handclose", false);
+
+                spriteRenderer.sprite = Resources.Load<Sprite>("newhand");
+                //transform.localScale = new Vector3(0.5f, 0.5f, 1);
             }
 
             if (bodies[bodyID].HandLeftState == Kinect.HandState.Closed && !isHandLeftClosed)
