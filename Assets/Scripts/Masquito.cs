@@ -53,10 +53,15 @@ public class Masquito : MonoBehaviour
     private bool lastDangerous;
 
 
+    //Item Effect Function
+    //public void[] (*foo)() = new void(*)();
+    public Action[] foo = new Action[10];
+    //public delegate void *foo() = weeds;
     //Animation Dependencies
     private Animator m_animator;
     private double deathAniLength;
 
+<<<<<<< HEAD
     //Masquito Informations
     public int mosquitoIndex;
     private  bool alive;
@@ -64,6 +69,8 @@ public class Masquito : MonoBehaviour
     //ManagerMosquito Dependencies.
     ManagerMasquito mosManager;
 
+=======
+>>>>>>> master
     // Start is called before the first frame update
     void Start()
     {
@@ -76,6 +83,7 @@ public class Masquito : MonoBehaviour
         //Animation Setup
         m_animator = gameObject.GetComponent<Animator>();
         m_animator.SetBool("check", false);
+        foo[0] = weeds;
     }
 
     // Update is called once per frame
@@ -118,11 +126,41 @@ public class Masquito : MonoBehaviour
 
             transform.position = new Vector3((float)x, (float)y, transform.position.z);
 
+<<<<<<< HEAD
             if (direction > PI / 2.0 && direction < 1.5 * PI)
             {
                 transform.localScale = new Vector3(1, transform.localScale.y, transform.localScale.z);
                 //transform.eulerAngles = new Vector3(0, 0, (float)((direction * 180 / PI)-PI));
                 transform.eulerAngles = new Vector3(0, 0, 0);
+=======
+        if(GlobalVars.itemUsedIndex > -1 && GlobalVars.itemIsUsed && inItemEffectDistance())
+        {
+            foo[GlobalVars.itemUsedIndex]();
+        }
+        else if (isDangerous3())
+        {
+            if (!lastDangerous)
+            {
+                ChangeToDangerous3();
+            }
+            dangerous3();
+            lastDangerous = true;
+        }
+        else if (lastDangerous)
+        {
+            lastDangerous = false;
+            //GetComponent<SpriteRenderer>().sprite = spriteOrigin;
+            ChangeToNormal();
+        }
+        else  if (AccuTime >= moveDuration )
+        {
+            //Arrange New Behavior
+            AccuTime = 0;
+            if (Math.Pow(x * x + y * y, 0.5) > GoBackDistance)
+            {  //Too far away from the center point
+                //Try to stay close to the center point
+                GoCenterBehavior();
+>>>>>>> master
             }
             else
             {
@@ -240,34 +278,47 @@ public class Masquito : MonoBehaviour
 
     void ChangeToDangerous3()
     {
-        AccuTime = 0;
         speed *= 1.3f;
-        Vector2 transToCursor = new Vector2(transform.position.x - cursor.x, transform.position.y - cursor.y);
-        Vector2 dir = new Vector2(Mathf.Cos((float)direction), Mathf.Sin((float)direction));
-        deltadir = Vector2.SignedAngle(dir, transToCursor + dir) / 180 * PI / 30;
-        deltadeltadir = 0;
         m_animator.SetBool("check", true);
     }
 
-    bool Dangerous3()
+    bool isDangerous3()
     {
-        cursor = MoveWithRightHand.position ;
-        cursor.z = 20;
-        //cursor = Camera.main.ScreenToWorldPoint(cursor);
         Vector3 pos = transform.position;
         pos.z = 20;
-        distance = Math.Sqrt(Math.Pow(cursor.x - pos.x, 2) + Math.Pow((cursor.y - pos.y), 2));
-        double lastDistance = Math.Sqrt(Math.Pow(lastCursorPosition.x - pos.x, 2) + Math.Pow((lastCursorPosition.y - pos.y), 2));
-        lastCursorPosition = cursor;
-
-        //if (distance < dangerous3Position && distance < lastDistance)
-        //    return true;
-        if (distance < dangerous3Position)
+        double distance =  GlobalVars.Vector2Distance(pos, GlobalVars.cursorPosition) ;
+        double lastDistance = GlobalVars.Vector2Distance(pos, GlobalVars.lastCursorPosition);
+       
+        if (distance < dangerous3Position )
             return true;
-
+   
         return false;
     }
 
+    void dangerous3()
+    {
+        Vector2 transToCursor = new Vector2(transform.position.x - GlobalVars.cursorPosition.x, transform.position.y - GlobalVars.cursorPosition.y);
+        Vector2 dir = new Vector2(Mathf.Cos((float)direction), Mathf.Sin((float)direction));
+        double n = dangerous3Position - transToCursor.magnitude;
+        direction = Vector2.SignedAngle(new Vector2(1, 0), dir + transToCursor * (float)n) / 180 * PI;
+        if (speed < 2) speed = 2;
+        deltadir = 0;
+        deltadeltadir = 0;
+    }
+
+    void weeds()
+    {
+        deltadir = UnityEngine.Random.Range(0.3f, 1f);
+    }
+
+    bool inItemEffectDistance()
+    {
+        if (GlobalVars.Vector2Distance(transform.position, GlobalVars.cursorPosition) < GlobalVars.itemEffectDistance)
+            return true;
+        return false;
+    }
+
+<<<<<<< HEAD
     public  void Kill()
     {
         if (alive)
@@ -278,4 +329,6 @@ public class Masquito : MonoBehaviour
         }
        
     }
+=======
+>>>>>>> master
 }

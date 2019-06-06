@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class ManagerMasquito : MonoBehaviour
 {
-    const int MaxMasquito =10;
+    const int MaxMasquito =0;
     private int curMasquito = 0;
     private Queue<int> NextMosquitoIndex = new Queue<int>();
     private GameObject[] Masquitos = new GameObject[MaxMasquito];
@@ -25,7 +25,12 @@ public class ManagerMasquito : MonoBehaviour
     // Update is called once per frame
      void Update()
     {
-        if(curMasquito < MaxMasquito)
+        GlobalVars.lastCursorPosition = GlobalVars.cursorPosition;
+        GlobalVars.cursorPosition = Input.mousePosition;
+        GlobalVars.cursorPosition.z = 20;
+        GlobalVars.cursorPosition = Camera.main.ScreenToWorldPoint(GlobalVars.cursorPosition);
+
+        if (curMasquito < MaxMasquito)
         {
             //if (NextMosquitoIndex.Count > 0)
             //{
