@@ -58,6 +58,8 @@ public class Mosquito : MonoBehaviour
     private Animator m_animator;
     private double deathAniLength;
 
+    public Action[] foo = new Action[10];
+
     //Mosquito Informations
     private  bool alive;
 
@@ -79,6 +81,8 @@ public class Mosquito : MonoBehaviour
         scaleX = transform.localScale.x;
         scaleY = transform.localScale.y;
         scaleZ = transform.localScale.z;
+        foo[0] = weeds;
+        foo[1] = bloodBaby;
     }
 
     // Update is called once per frame
@@ -132,12 +136,17 @@ public class Mosquito : MonoBehaviour
                 transform.eulerAngles = new Vector3(0, 0, 0);
             }
 
-            if (Dangerous3())
+            if (GlobalVars.itemUsedIndex > -1 && GlobalVars.itemIsUsed && inItemEffectDistance())
+            {
+                foo[GlobalVars.itemUsedIndex]();
+            }
+            else if (isDangerous3())
             {
                 if (!lastDangerous)
                 {
                     ChangeToDangerous3();
                 }
+                dangerous3();
                 lastDangerous = true;
             }
             else if (lastDangerous)
@@ -250,7 +259,7 @@ public class Mosquito : MonoBehaviour
         m_animator.SetBool("check", true);
     }
 
-    bool Dangerous3()
+    bool isDangerous3()
     {
         cursor = PlayerController.position ;
         cursor.z = 20;
@@ -269,6 +278,17 @@ public class Mosquito : MonoBehaviour
         return false;
     }
 
+    void dangerous3()
+    {
+        Vector2 transToCursor = new Vector2(transform.position.x - GlobalVars.cursorPosition.x, transform.position.y - GlobalVars.cursorPosition.y);
+        Vector2 dir = new Vector2(Mathf.Cos((float)direction), Mathf.Sin((float)direction));
+        double n = dangerous3Position - transToCursor.magnitude;
+        direction = Vector2.SignedAngle(new Vector2(1, 0), dir + transToCursor * (float)n) / 180 * PI;
+        if (speed < 2) speed = 2;
+        deltadir = 0;
+        deltadeltadir = 0;
+    }
+
     public  void Kill()
     {
         if (alive)
@@ -279,4 +299,28 @@ public class Mosquito : MonoBehaviour
         }
        
     }
+
+    void weeds()
+    {
+        deltadir = UnityEngine.Random.Range(0.3f, 1f);
+    }
+
+    void bloodBaby()
+    {
+        Vector2 transToCursor = new Vector2(GlobalVars.cursorPosition.x - transform.position.x, GlobalVars.cursorPosition.y - transform.position.y);
+        Vector2 dir = new Vector2(Mathf.Cos((float)direction), Mathf.Sin((float)direction));
+        double n = (GlobalVars.itemEffectDistance - transToCursor.magnitude) / 5.0;
+        direction = Vector2.SignedAngle(new Vector2(1, 0), dir + transToCursor * (float)n) / 180 * PI;
+        if (speed < 2) speed = 2;
+        deltadir = 0;
+        deltadeltadir = 0;
+    }
+
+    bool inItemEffectDistance()
+    {
+        if (GlobalVars.Vector2Distance(transform.position, GlobalVars.cursorPosition) < GlobalVars.itemEffectDistance)
+            return true;
+        return false;
+    }
+
 }

@@ -128,7 +128,8 @@ public class PlayerController : MonoBehaviour
             }
         }
 
-        position = transform.position;
+        GlobalVars.lastCursorPosition = GlobalVars.cursorPosition;
+        GlobalVars.cursorPosition = transform.position;
     }
 
 

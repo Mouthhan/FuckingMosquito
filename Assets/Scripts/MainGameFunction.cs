@@ -24,7 +24,7 @@ public class MainGameFunction : MonoBehaviour
     public int[] itemsEffectTime = new int[10];
     public double itemExistTime = 0;
     //public double itemUsingTime = 0;
-    
+     
     // Start is called before the first frame update
     void Start()
     {
@@ -36,7 +36,9 @@ public class MainGameFunction : MonoBehaviour
 
         //initialize item effect
         itemsEffectDistanceList[0] = 3;
+        itemsEffectDistanceList[1] = 10;
         items[0].SetActive(false);
+        items[1].SetActive(false);
     }
     // Update is called once per frame
     void Update()
@@ -79,27 +81,26 @@ public class MainGameFunction : MonoBehaviour
             }
         }
         //item appear.
-        if (time % 5 == 0 && time < 60)
+        if (time % 5 == 0 && time < 60 && GlobalVars.itemUsedIndex == -1)
         {
-            GlobalVars.itemUsedIndex = 0;
+            GlobalVars.itemUsedIndex = (int)Random.Range(0, 2);
             GlobalVars.itemIsUsed = false;
             items[GlobalVars.itemUsedIndex].SetActive(true);
             GlobalVars.itemEffectDistance = itemsEffectDistanceList[GlobalVars.itemUsedIndex];
             itemExistTime = 2;
         }
-        //item is used.
+        
         if(GlobalVars.itemUsedIndex > -1){
+            //item is used.
             if(GlobalVars.itemIsUsed)
             {
                 items[GlobalVars.itemUsedIndex].transform.position = GlobalVars.cursorPosition;
                 if(GlobalVars.itemUsingTime > 0)
                 {
-                    Debug.Log("Using");
                     GlobalVars.itemUsingTime -= Time.deltaTime;
                 }
                 else
                 {
-                    Debug.Log("Not Using");
                     items[GlobalVars.itemUsedIndex].SetActive(false);
                     GlobalVars.itemIsUsed = false;
                     GlobalVars.itemEffectDistance = 0;
