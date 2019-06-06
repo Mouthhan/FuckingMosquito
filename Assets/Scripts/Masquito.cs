@@ -103,13 +103,15 @@ public class Masquito : MonoBehaviour
 
         if (direction > PI/2.0 && direction <  1.5*PI)
         {
-            transform.localScale = new Vector3(1, transform.localScale.y, transform.localScale.z);
+            //transform.localScale = new Vector3(1, transform.localScale.y, transform.localScale.z);
+            transform.localScale = new Vector3(1, 1, transform.localScale.z);
             //transform.eulerAngles = new Vector3(0, 0, (float)((direction * 180 / PI)-PI));
             transform.eulerAngles = new Vector3(0, 0, 0);
         }
         else
         {
-            transform.localScale = new Vector3(-1, transform.localScale.y, transform.localScale.z);
+            //transform.localScale = new Vector3(-1, transform.localScale.y, transform.localScale.z);
+            transform.localScale = new Vector3(-1, 1, transform.localScale.z);
             // transform.eulerAngles = new Vector3(0, 0, (float)(direction * 180 / PI));
             transform.eulerAngles = new Vector3(0, 0, 0);
         }
