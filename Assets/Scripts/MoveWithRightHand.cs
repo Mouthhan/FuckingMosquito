@@ -1,5 +1,7 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
+using System.Collections;
+using System.Collections.Generic;
 using Kinect = Windows.Kinect;
 
 public class MoveWithRightHand : MonoBehaviour
@@ -17,6 +19,9 @@ public class MoveWithRightHand : MonoBehaviour
     bool isHandRightClosed = false;
 
     static readonly bool DEBUG = true;
+
+    Dictionary<int, Mosquito> DestroyList = new Dictionary<int, Mosquito>();
+
 
     void Start()
     {
@@ -37,7 +42,7 @@ public class MoveWithRightHand : MonoBehaviour
                 if (!isHandRightClosed)
                 {
                     isHandRightClosed = true;
-                    GetComponent<HandTrigger>().Kill();
+                    Kill();
                 }
             }
             else if (Input.GetMouseButtonUp(0))
@@ -100,4 +105,31 @@ public class MoveWithRightHand : MonoBehaviour
 
         position = transform.position;
     }
+
+    void OnTriggerEnter2D(Collider2D ColliderObj)
+    {
+        if (ColliderObj.gameObject.tag == "Mosquito")
+        {
+            Mosquito ms = ColliderObj.gameObject.GetComponent<Mosquito>();
+            if (!DestroyList.ContainsKey(ms.mosquitoIndex)) DestroyList.Add(ms.mosquitoIndex, ms);
+        }
+    }
+
+    public void Kill()
+    {
+        foreach (KeyValuePair<int, Mosquito> entry in DestroyList)
+        {
+            entry.Value.Kill();
+        }
+        DestroyList.Clear();
+    }
+
+    void OnTriggerLeave2D(Collider2D ColliderObj)
+    {
+        if (ColliderObj.gameObject.tag == "Mosquito")
+        {
+            DestroyList.Remove(ColliderObj.gameObject.GetComponent<Mosquito>().mosquitoIndex);
+        }
+    }
+
 }

@@ -3,12 +3,13 @@ using System.Collections.Generic;
 using System;
 using UnityEngine;
 
-public class Masquito : MonoBehaviour
+public class Mosquito : MonoBehaviour
 {
 
     //Location Variables
     private double x = 0;
     private double y = 0;
+    private float scaleX, scaleY, scaleZ;
 
     //Environment Settings
     private const double GoBackDistance = 20;
@@ -57,12 +58,12 @@ public class Masquito : MonoBehaviour
     private Animator m_animator;
     private double deathAniLength;
 
-    //Masquito Informations
+    //Mosquito Informations
     public int mosquitoIndex;
     private  bool alive;
 
     //ManagerMosquito Dependencies.
-    ManagerMasquito mosManager;
+    ManagerMosquito mosManager;
 
     // Start is called before the first frame update
     void Start()
@@ -76,6 +77,9 @@ public class Masquito : MonoBehaviour
         //Animation Setup
         m_animator = gameObject.GetComponent<Animator>();
         m_animator.SetBool("check", false);
+        scaleX = transform.localScale.x;
+        scaleY = transform.localScale.y;
+        scaleZ = transform.localScale.z;
     }
 
     // Update is called once per frame
@@ -93,7 +97,7 @@ public class Masquito : MonoBehaviour
             {
                 Debug.Log("Mosquito Distroyed");
                 Destroy(gameObject);
-                GameObject.Find("MosquitoGenerator").GetComponent<ManagerMasquito>().Destroy(mosquitoIndex);
+                GameObject.Find("MosquitoGenerator").GetComponent<ManagerMosquito>().Destroy(mosquitoIndex);
             }
             return;
         }
@@ -120,14 +124,12 @@ public class Masquito : MonoBehaviour
 
             if (direction > PI / 2.0 && direction < 1.5 * PI)
             {
-                transform.localScale = new Vector3(1, transform.localScale.y, transform.localScale.z);
-                //transform.eulerAngles = new Vector3(0, 0, (float)((direction * 180 / PI)-PI));
+                transform.localScale = new Vector3(scaleX,scaleY,scaleZ);
                 transform.eulerAngles = new Vector3(0, 0, 0);
             }
             else
             {
-                transform.localScale = new Vector3(-1, transform.localScale.y, transform.localScale.z);
-                // transform.eulerAngles = new Vector3(0, 0, (float)(direction * 180 / PI));
+                transform.localScale = new Vector3(-scaleX, scaleY, scaleZ);
                 transform.eulerAngles = new Vector3(0, 0, 0);
             }
 

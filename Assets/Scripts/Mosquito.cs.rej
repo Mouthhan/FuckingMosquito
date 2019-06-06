@@ -1,0 +1,9 @@
+diff a/Assets/Scripts/Mosquito.cs b/Assets/Scripts/Mosquito.cs	(rejected hunks)
+@@ -9,6 +9,7 @@
+     //Location Variables
+     private double x = 0;
+     private double y = 0;
++    private float scaleX, scaleY, scaleZ;
+ 
+     //Environment Settings
+     private const double GoBackDistance = 20;
