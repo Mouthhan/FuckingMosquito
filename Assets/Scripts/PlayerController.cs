@@ -4,7 +4,7 @@ using Kinect = Windows.Kinect;
 
 public class PlayerController : MonoBehaviour
 {
-    public static Vector3 position;
+    ///public static Vector3 position;
     public GameObject bodySourceManager;
     // public Text TextIsClosed;
 
@@ -31,7 +31,7 @@ public class PlayerController : MonoBehaviour
     //animator
     //Animator m_animator;
     
-    static readonly bool DEBUG = false;
+    static readonly bool DEBUG = true;
 
     void Start()
     {
@@ -62,6 +62,7 @@ public class PlayerController : MonoBehaviour
         {
             // Mouse Mode
             mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+
             transform.position = new Vector3(mousePos.x, mousePos.y);
         }
         else
@@ -124,8 +125,10 @@ public class PlayerController : MonoBehaviour
                 isHandLeftClosed = false;
             }
         }
+        GlobalVars.lastCursorPosition = GlobalVars.cursorPosition;
+        GlobalVars.cursorPosition = transform.position;
 
-        position = transform.position;
+        Debug.Log(GlobalVars.cursorPosition);
     }
 
 

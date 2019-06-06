@@ -9,7 +9,6 @@ public class Masquito : MonoBehaviour
     //Location Variables
     private double x = 0;
     private double y = 0;
-    private float scaleX, scaleY, scaleZ;
 
     //Environment Settings
     private const double GoBackDistance = 20;
@@ -73,9 +72,7 @@ public class Masquito : MonoBehaviour
         m_animator = gameObject.GetComponent<Animator>();
         m_animator.SetBool("check", false);
         foo[0] = weeds;
-        scaleX = transform.localScale.x;
-        scaleY = transform.localScale.y;
-        scaleZ = transform.localScale.z;
+        foo[1] = bloodBaby;
     }
 
     // Update is called once per frame
@@ -107,12 +104,14 @@ public class Masquito : MonoBehaviour
 
         if (direction > PI/2.0 && direction <  1.5*PI)
         {
-            transform.localScale = new Vector3(scaleX,scaleY,scaleZ);
+            transform.localScale = new Vector3(1, transform.localScale.y, transform.localScale.z);
+            //transform.eulerAngles = new Vector3(0, 0, (float)((direction * 180 / PI)-PI));
             transform.eulerAngles = new Vector3(0, 0, 0);
         }
         else
         {
-            transform.localScale = new Vector3(-scaleX, scaleY, scaleZ);
+            transform.localScale = new Vector3(-1, transform.localScale.y, transform.localScale.z);
+            // transform.eulerAngles = new Vector3(0, 0, (float)(direction * 180 / PI));
             transform.eulerAngles = new Vector3(0, 0, 0);
         }
 
@@ -263,6 +262,17 @@ public class Masquito : MonoBehaviour
     void weeds()
     {
         deltadir = UnityEngine.Random.Range(0.3f, 1f);
+    }
+
+    void bloodBaby()
+    {
+        Vector2 transToCursor = new Vector2(GlobalVars.cursorPosition.x - transform.position.x, GlobalVars.cursorPosition.y - transform.position.y);
+        Vector2 dir = new Vector2(Mathf.Cos((float)direction), Mathf.Sin((float)direction));
+        double n = (GlobalVars.itemEffectDistance - transToCursor.magnitude) / 5.0;
+        direction = Vector2.SignedAngle(new Vector2(1, 0), dir + transToCursor * (float)n) / 180 * PI;
+        if (speed < 2) speed = 2;
+        deltadir = 0;
+        deltadeltadir = 0;
     }
 
     bool inItemEffectDistance()
