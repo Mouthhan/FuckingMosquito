@@ -16,4 +16,10 @@ public class SceneSwitcher : MonoBehaviour
         Debug.Log("To menu");
         SceneManager.LoadScene("Scenes/Menu");
     }
+
+     public void SwitchToOpening()
+    {
+        Debug.Log("To Opening");
+        SceneManager.LoadScene("Scenes/Opening");
+    }
 }

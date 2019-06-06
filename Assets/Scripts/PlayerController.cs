@@ -32,9 +32,9 @@ public class PlayerController : MonoBehaviour
     //animator
     Animator m_animator;
 
-    Dictionary<int, Mosquito> DestroyList = new Dictionary<int, Mosquito>();
+    /*Dictionary<int, Mosquito>*/ List<GameObject> DestroyList = new /*Dictionary<int, Mosquito>()*/ List<GameObject>();
 
-    static readonly bool DEBUG = false;
+    static readonly bool DEBUG = true;
 
     void Start()
     {
@@ -66,6 +66,18 @@ public class PlayerController : MonoBehaviour
             // Mouse Mode
             mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
             transform.position = new Vector3(mousePos.x, mousePos.y);
+
+            if (Input.GetMouseButtonDown(0) && !isHandRightClosed)
+            {
+                isHandRightClosed = true;
+                m_animator.SetBool("handclosebool", true);
+                KillMosquito();
+            }
+            else if (Input.GetMouseButtonUp(0) && isHandRightClosed)
+            {
+                isHandRightClosed = false;
+                m_animator.SetBool("handclosebool", false);
+            }
         }
         else
         {
@@ -132,11 +144,18 @@ public class PlayerController : MonoBehaviour
         GlobalVars.cursorPosition = transform.position;
     }
 
+    public void KillMosquito()
+    {
+        foreach(GameObject obj in DestroyList)
+        {
+            obj.GetComponent<Mosquito>().Kill();
+        }
+        DestroyList.Clear();
+    }
 
     void OnTriggerEnter2D(Collider2D ColliderObj)
     {
-        // Debug.Log(other.gameObject.tag);
-        if(ColliderObj.gameObject.tag == "item")
+        if (ColliderObj.gameObject.tag == "item")
         {
             GlobalVars.itemIsUsed = true;
             GlobalVars.itemEffectDistance = 3;
@@ -144,28 +163,21 @@ public class PlayerController : MonoBehaviour
         }
         else if (ColliderObj.gameObject.tag == "Mosquito")
         {
-            if (isHandRightClosed == true)
+            if (isHandRightClosed == false)
             {
-                Mosquito ms = ColliderObj.gameObject.GetComponent<Mosquito>();
-                // if (!DestroyList.ContainsKey(ms.mosquitoIndex)) DestroyList.Add(ms.mosquitoIndex, ms);
+                if (!DestroyList.Contains(ColliderObj.gameObject))
+                {
+                    DestroyList.Add(ColliderObj.gameObject);
+                }
             }
         }
     }
 
-    public void Kill()
-    {
-        foreach (KeyValuePair<int, Mosquito> entry in DestroyList)
-        {
-            entry.Value.Kill();
-        }
-        DestroyList.Clear();
-    }
-
-    void OnTriggerLeave2D(Collider2D ColliderObj)
+    void OnTriggerExit2D(Collider2D ColliderObj)
     {
         if (ColliderObj.gameObject.tag == "Mosquito")
         {
-            // DestroyList.Remove(ColliderObj.gameObject.GetComponent<Mosquito>().mosquitoIndex);
+            DestroyList.Remove(ColliderObj.gameObject);
         }
     }
 }
