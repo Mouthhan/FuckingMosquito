@@ -98,7 +98,6 @@ public class Mosquito : MonoBehaviour
             deathAniLength -= Time.deltaTime;
             if(deathAniLength < 0)
             {
-                Debug.Log("Mosquito Distroyed");
                 Destroy(gameObject);
                 GameObject.Find("MosquitoGenerator").GetComponent<ManagerMosquito>().Destroy();
             }

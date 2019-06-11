@@ -32,7 +32,7 @@ public class PlayerController : MonoBehaviour
     //animator
     Animator m_animator;
 
-    /*Dictionary<int, Mosquito>*/ List<GameObject> DestroyList = new /*Dictionary<int, Mosquito>()*/ List<GameObject>();
+    List<GameObject> DestroyList = new List<GameObject>();
 
     static readonly bool DEBUG = true;
 

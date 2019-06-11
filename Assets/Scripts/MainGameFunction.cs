@@ -8,10 +8,16 @@ public class MainGameFunction : MonoBehaviour
     public Text TextTime;
     public Text TextScore;
     public Text CountDown;
+
     public GameObject RestartButton;
     public GameObject QuitButton;
     public GameObject ResumeButton;
     public GameObject OverText;
+
+
+    public Canvas CountDownCanvas;
+
+
     float time_f = 0f;
     int time = -1;
     float time_c = 0f;//倒數
@@ -39,6 +45,8 @@ public class MainGameFunction : MonoBehaviour
         itemsEffectDistanceList[1] = 10;
         items[0].SetActive(false);
         items[1].SetActive(false);
+
+
     }
     // Update is called once per frame
     void Update()
@@ -77,7 +85,7 @@ public class MainGameFunction : MonoBehaviour
             {
                 time_c += Time.deltaTime;
                 count_down = 3 - (int)time_c;
-                CountDown.text = count_down.ToString();
+               // CountDown.text = count_down.ToString();
             }
         }
         //item appear.
@@ -127,14 +135,15 @@ public class MainGameFunction : MonoBehaviour
     }
     public void Resume()//resume的功能
     {
-        // GlobalVars.MainGameStop = 0;
         count_down = 3;
+        CountDownCanvas.GetComponent<CountDown>().SetCountDown(count_down);
         RestartButton.SetActive(false);
         QuitButton.SetActive(false);
         ResumeButton.SetActive(false);
     }
     public void Restart()//restart button的功能
     {
+      
         GlobalVars.MainGameStop = 0;
         RestartButton.SetActive(false);
         QuitButton.SetActive(false);
