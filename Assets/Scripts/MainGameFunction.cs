@@ -133,6 +133,7 @@ public class MainGameFunction : MonoBehaviour
             }
         }
     }
+
     public void Resume()//resume的功能
     {
         count_down = 3;
@@ -143,7 +144,7 @@ public class MainGameFunction : MonoBehaviour
     }
     public void Restart()//restart button的功能
     {
-      
+        Debug.Log("Log");
         GlobalVars.MainGameStop = 0;
         RestartButton.SetActive(false);
         QuitButton.SetActive(false);

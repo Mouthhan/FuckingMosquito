@@ -3,16 +3,15 @@ using UnityEngine.UI;
 using System.Collections.Generic;
 using Kinect = Windows.Kinect;
 
-public class PlayerController : MonoBehaviour
+public class menu_hand : MonoBehaviour
 {
     public static Vector3 position;
     public GameObject bodySourceManager;
     // public Text TextIsClosed;
-    public Button startbutton;
 
     SpriteRenderer spriteRenderer;
     BodySourceManager bodyManager;
-
+    public Button startbutton;
     Kinect.CoordinateMapper coordinate;
 
     Kinect.Body[] bodies;
@@ -32,10 +31,9 @@ public class PlayerController : MonoBehaviour
 
     //animator
     Animator m_animator;
-    AnimatorStateInfo stateInfo;
+
     List<GameObject> DestroyList = new List<GameObject>();
     GameObject ActiveUIButton;
-    bool isHoldStartButton = false;
 
     static readonly bool DEBUG = false;
 
@@ -113,7 +111,7 @@ public class PlayerController : MonoBehaviour
             Kinect.ColorSpacePoint _colorSpacePoint = coordinate.MapCameraPointToColorSpace(_cameraSpacePoint);
 
             transform.position = new Vector3(scalar_X * (_colorSpacePoint.X - solution_X) / solution_X, -scalar_Y * (_colorSpacePoint.Y - solution_Y) / solution_Y);
-            stateInfo = m_animator.GetCurrentAnimatorStateInfo(0);
+
             if (bodies[bodyID].HandRightState == Kinect.HandState.Closed && !isHandRightClosed)
             {
                 isHandRightClosed = true;
@@ -127,14 +125,7 @@ public class PlayerController : MonoBehaviour
                     HandClickEvent e = ActiveUIButton.GetComponent<HandClickEvent>();
                     e.onHandClick.Invoke();
                 }
-                if (isHoldStartButton == true)
-                {
-                    
-                    Debug.Log("123");
-                    // 加一個 動畫結束 再Invoke
-                    if(stateInfo.normalizedTime>0.1f)
-                        startbutton.onClick.Invoke();
-                }
+
                 //spriteRenderer.sprite = Resources.Load<Sprite>("newhandclose");
                 //transform.localScale = new Vector3(3, 3, 1);
             }
@@ -197,13 +188,11 @@ public class PlayerController : MonoBehaviour
                 ActiveUIButton = ColliderObj.gameObject;
             }
         }
-        else if (ColliderObj.gameObject.tag == "startbutton")
+        else if(ColliderObj.gameObject.tag == "startbutton")
         {
-            Debug.Log("123");
-            if (isHandRightClosed == false)
+            if (isHandRightClosed == true)
             {
-                Debug.Log(456);
-                isHoldStartButton = true;
+                startbutton.onClick.Invoke();
             }
         }
     }
@@ -214,8 +203,7 @@ public class PlayerController : MonoBehaviour
         {
             DestroyList.Remove(ColliderObj.gameObject);
         }
-   
+
         ActiveUIButton = null;
-        isHoldStartButton = false;
     }
 }
