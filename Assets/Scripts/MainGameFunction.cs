@@ -15,7 +15,10 @@ public class MainGameFunction : MonoBehaviour
     public GameObject OverText;
     
     public Canvas CountDownCanvas;
-    
+
+    // 一回合的時間
+    const int gametime = 60;
+
     public int time = -1;
     float time_f = 0f;
     float time_c = 0f;//倒數
@@ -49,15 +52,12 @@ public class MainGameFunction : MonoBehaviour
     {
         if(Input.GetKeyDown(KeyCode.Escape))
         {
-            RestartButton.SetActive(true);
-            QuitButton.SetActive(true);
-            ResumeButton.SetActive(true);
-            GlobalVars.MainGameStop = 1;
+            Stop();
         }
         if (GlobalVars.MainGameStop == 0)
         {
             time_f += Time.deltaTime;
-            time = 10 - (int)time_f;
+            time = gametime - (int)time_f;
             SetTime();
             // AddScore();
         }
@@ -128,6 +128,14 @@ public class MainGameFunction : MonoBehaviour
         //        }
         //    }
         //}
+    }
+
+    public void Stop()
+    {
+        RestartButton.SetActive(true);
+        QuitButton.SetActive(true);
+        ResumeButton.SetActive(true);
+        GlobalVars.MainGameStop = 1;
     }
 
     public void Resume()//resume的功能
