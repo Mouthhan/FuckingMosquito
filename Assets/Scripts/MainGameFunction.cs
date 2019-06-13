@@ -63,7 +63,7 @@ public class MainGameFunction : MonoBehaviour
             time_f += Time.deltaTime;
             time = 60 - (int)time_f;
             SetTime();
-            AddScore();
+            // AddScore();
         }
         if (time == 0)
         {

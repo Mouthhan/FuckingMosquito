@@ -6,9 +6,8 @@ using Kinect = Windows.Kinect;
 public class PlayerController : MonoBehaviour
 {
     public static Vector3 position;
+    public MainGameFunction mainGameFunction;
     public GameObject bodySourceManager;
-    // public Text TextIsClosed;
-    public Button startbutton;
 
     SpriteRenderer spriteRenderer;
     BodySourceManager bodyManager;
@@ -22,7 +21,7 @@ public class PlayerController : MonoBehaviour
     float solution_X = 960f;
     float solution_Y = 640f;
     float scalar_X = 19.2f;
-    float scalar_Y = 6.4f;
+    float scalar_Y = 16.4f;
     
     bool isHandRightClosed = false;
     bool isHandLeftClosed = false;
@@ -127,14 +126,6 @@ public class PlayerController : MonoBehaviour
                     HandClickEvent e = ActiveUIButton.GetComponent<HandClickEvent>();
                     e.onHandClick.Invoke();
                 }
-                if (isHoldStartButton == true)
-                {
-                    
-                    Debug.Log("123");
-                    // 加一個 動畫結束 再Invoke
-                    if(stateInfo.normalizedTime>0.1f)
-                        startbutton.onClick.Invoke();
-                }
                 //spriteRenderer.sprite = Resources.Load<Sprite>("newhandclose");
                 //transform.localScale = new Vector3(3, 3, 1);
             }
@@ -167,6 +158,7 @@ public class PlayerController : MonoBehaviour
         foreach(GameObject obj in DestroyList)
         {
             obj.GetComponent<Mosquito>().Kill();
+            mainGameFunction.AddScore();
         }
         DestroyList.Clear();
     }
@@ -195,15 +187,6 @@ public class PlayerController : MonoBehaviour
             if (isHandRightClosed == false)
             {
                 ActiveUIButton = ColliderObj.gameObject;
-            }
-        }
-        else if (ColliderObj.gameObject.tag == "startbutton")
-        {
-            Debug.Log("123");
-            if (isHandRightClosed == false)
-            {
-                Debug.Log(456);
-                isHoldStartButton = true;
             }
         }
     }

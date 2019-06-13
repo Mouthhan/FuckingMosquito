@@ -3,12 +3,11 @@ using UnityEngine.UI;
 using System.Collections.Generic;
 using Kinect = Windows.Kinect;
 
-public class menu_hand : MonoBehaviour
+public class MenuPlayerController : MonoBehaviour
 {
     public static Vector3 position;
     public GameObject bodySourceManager;
-    public Button start_button;
-    // public Text TextIsClosed;
+    public Button StartButton;
 
     SpriteRenderer spriteRenderer;
     BodySourceManager bodyManager;
@@ -32,8 +31,8 @@ public class menu_hand : MonoBehaviour
 
     //animator
     Animator m_animator;
-
-    Dictionary<int, Mosquito> DestroyList = new Dictionary<int, Mosquito>();
+    AnimatorStateInfo stateInfo;
+    bool isHoldStartButton = false;
 
     static readonly bool DEBUG = false;
 
@@ -67,6 +66,17 @@ public class menu_hand : MonoBehaviour
             // Mouse Mode
             mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
             transform.position = new Vector3(mousePos.x, mousePos.y);
+
+            if (Input.GetMouseButtonDown(0) && !isHandRightClosed)
+            {
+                isHandRightClosed = true;
+                m_animator.SetBool("handclosebool", true);
+            }
+            else if (Input.GetMouseButtonUp(0) && isHandRightClosed)
+            {
+                isHandRightClosed = false;
+                m_animator.SetBool("handclosebool", false);
+            }
         }
         else
         {
@@ -99,24 +109,23 @@ public class menu_hand : MonoBehaviour
             Kinect.ColorSpacePoint _colorSpacePoint = coordinate.MapCameraPointToColorSpace(_cameraSpacePoint);
 
             transform.position = new Vector3(scalar_X * (_colorSpacePoint.X - solution_X) / solution_X, -scalar_Y * (_colorSpacePoint.Y - solution_Y) / solution_Y);
-
+            stateInfo = m_animator.GetCurrentAnimatorStateInfo(0);
             if (bodies[bodyID].HandRightState == Kinect.HandState.Closed && !isHandRightClosed)
             {
                 isHandRightClosed = true;
 
                 m_animator.SetBool("handclosebool", true);
 
-                //spriteRenderer.sprite = Resources.Load<Sprite>("newhandclose");
-                //transform.localScale = new Vector3(3, 3, 1);
+                if (isHoldStartButton)
+                {
+                    StartButton.onClick.Invoke();
+                }
             }
             else if (bodies[bodyID].HandRightState != Kinect.HandState.Closed && isHandRightClosed)
             {
                 isHandRightClosed = false;
 
                 m_animator.SetBool("handclosebool", false);
-
-                //spriteRenderer.sprite = Resources.Load<Sprite>("newhand");
-                //transform.localScale = new Vector3(0.5f, 0.5f, 1);
             }
 
             if (bodies[bodyID].HandLeftState == Kinect.HandState.Closed && !isHandLeftClosed)
@@ -133,47 +142,17 @@ public class menu_hand : MonoBehaviour
         GlobalVars.cursorPosition = transform.position;
     }
 
-
     void OnTriggerEnter2D(Collider2D ColliderObj)
     {
-        // Debug.Log(other.gameObject.tag);
-        if (ColliderObj.gameObject.tag == "item")
+        if (ColliderObj.gameObject.tag == "startbutton")
         {
-            GlobalVars.itemIsUsed = true;
-            GlobalVars.itemEffectDistance = 3;
-            GlobalVars.itemUsingTime = 2;
-        }
-        else if (ColliderObj.gameObject.tag == "Mosquito")
-        {
-            if (isHandRightClosed == true)
-            {
-                Mosquito ms = ColliderObj.gameObject.GetComponent<Mosquito>();
-                // if (!DestroyList.ContainsKey(ms.mosquitoIndex)) DestroyList.Add(ms.mosquitoIndex, ms);
-            }
-        }
-        else if (ColliderObj.gameObject.tag == "startbutton")
-        {
-            if (isHandRightClosed == true)
-            {
-                start_button.onClick.Invoke();
-            }
+            Debug.Log("碰撞");
+            isHoldStartButton = true;
         }
     }
 
-    public void Kill()
+    void OnTriggerExit2D(Collider2D ColliderObj)
     {
-        foreach (KeyValuePair<int, Mosquito> entry in DestroyList)
-        {
-            entry.Value.Kill();
-        }
-        DestroyList.Clear();
-    }
-
-    void OnTriggerLeave2D(Collider2D ColliderObj)
-    {
-        if (ColliderObj.gameObject.tag == "Mosquito")
-        {
-            // DestroyList.Remove(ColliderObj.gameObject.GetComponent<Mosquito>().mosquitoIndex);
-        }
+        isHoldStartButton = false;
     }
 }
