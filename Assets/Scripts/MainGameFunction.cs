@@ -154,14 +154,22 @@ public class MainGameFunction : MonoBehaviour
         RestartButton.SetActive(false);
         QuitButton.SetActive(false);
         ResumeButton.SetActive(false);
+        OverText.SetActive(false);
         time_f = 0f;
         time = 0;
         score = 0;
+        SetTime();
+        SetScore();
     }
     public void SetTime()//時間
     {
         TextTime.text = "Time: ";
         TextTime.text += time.ToString();
+    }
+    void SetScore()
+    {
+        TextScore.text = "Score: ";
+        TextScore.text += score.ToString();
     }
     public void AddScore()//加分
     {
