@@ -150,6 +150,13 @@ public class PlayerController : MonoBehaviour
                 // if (!DestroyList.ContainsKey(ms.mosquitoIndex)) DestroyList.Add(ms.mosquitoIndex, ms);
             }
         }
+        else if(ColliderObj.gameObject.tag == "startbutton")
+        {
+            if (isHandRightClosed == true)
+            {
+
+            }
+        }
     }
 
     public void Kill()

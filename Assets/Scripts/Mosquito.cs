@@ -77,7 +77,8 @@ public class Mosquito : MonoBehaviour
         alive = true;
         //Animation Setup
         m_animator = gameObject.GetComponent<Animator>();
-        m_animator.SetBool("check", false);
+        m_animator.SetBool("isdie", false);
+        m_animator.SetBool("normal", true);
         scaleX = transform.localScale.x;
         scaleY = transform.localScale.y;
         scaleZ = transform.localScale.z;
@@ -245,7 +246,7 @@ public class Mosquito : MonoBehaviour
     void ChangeToNormal()
     {
         speed /= 1.3f;
-        m_animator.SetBool("check", false);
+        m_animator.SetBool("normal", true);
     }
 
     void ChangeToDangerous3()
@@ -256,7 +257,7 @@ public class Mosquito : MonoBehaviour
         Vector2 dir = new Vector2(Mathf.Cos((float)direction), Mathf.Sin((float)direction));
         deltadir = Vector2.SignedAngle(dir, transToCursor + dir) / 180 * PI / 30;
         deltadeltadir = 0;
-        m_animator.SetBool("check", true);
+        m_animator.SetBool("normal", false);
     }
 
     bool isDangerous3()

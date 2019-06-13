@@ -13,6 +13,8 @@ public class GlobalVars : MonoBehaviour
     public static Vector3 cursorPosition;
     public static Vector3 lastCursorPosition;
 
+    public static GameObject start_button;
+
     //items
     public static int itemUsedIndex = -1;
     public static bool itemIsUsed = false;
