@@ -121,9 +121,11 @@ public class PlayerController : MonoBehaviour
 
                 KillMosquito();
 
+                Debug.Log("手關起來ㄌ");
                 if (ActiveUIButton != null)
                 {
                     HandClickEvent e = ActiveUIButton.GetComponent<HandClickEvent>();
+                    Debug.Log("觸發 UI_Button 事件");
                     e.onHandClick.Invoke();
                 }
                 //spriteRenderer.sprite = Resources.Load<Sprite>("newhandclose");
@@ -183,7 +185,7 @@ public class PlayerController : MonoBehaviour
         }
         else if (ColliderObj.gameObject.tag == "UI_Button")
         {
-            Debug.Log("碰撞");
+            Debug.Log("碰撞UI_Button");
             if (isHandRightClosed == false)
             {
                 ActiveUIButton = ColliderObj.gameObject;
@@ -193,6 +195,7 @@ public class PlayerController : MonoBehaviour
 
     void OnTriggerExit2D(Collider2D ColliderObj)
     {
+        Debug.Log("離開");
         if (ColliderObj.gameObject.tag == "Mosquito")
         {
             DestroyList.Remove(ColliderObj.gameObject);

@@ -13,13 +13,11 @@ public class MainGameFunction : MonoBehaviour
     public GameObject QuitButton;
     public GameObject ResumeButton;
     public GameObject OverText;
-
-
+    
     public Canvas CountDownCanvas;
-
-
+    
+    public int time = -1;
     float time_f = 0f;
-    int time = -1;
     float time_c = 0f;//倒數
     int count_down = -1;
     int score = 0;
@@ -40,13 +38,11 @@ public class MainGameFunction : MonoBehaviour
         QuitButton.SetActive(false);
         ResumeButton.SetActive(false);
 
-        //initialize item effect
-        itemsEffectDistanceList[0] = 3;
-        itemsEffectDistanceList[1] = 10;
-        items[0].SetActive(false);
-        items[1].SetActive(false);
-
-
+        ////initialize item effect
+        //itemsEffectDistanceList[0] = 3;
+        //itemsEffectDistanceList[1] = 10;
+        //items[0].SetActive(false);
+        //items[1].SetActive(false);
     }
     // Update is called once per frame
     void Update()
@@ -61,7 +57,7 @@ public class MainGameFunction : MonoBehaviour
         if (GlobalVars.MainGameStop == 0)
         {
             time_f += Time.deltaTime;
-            time = 60 - (int)time_f;
+            time = 10 - (int)time_f;
             SetTime();
             // AddScore();
         }
@@ -89,53 +85,54 @@ public class MainGameFunction : MonoBehaviour
             }
         }
         //item appear.
-        if (time % 5 == 0 && time < 60 && GlobalVars.itemUsedIndex == -1)
-        {
-            GlobalVars.itemUsedIndex = (int)Random.Range(0, 2);
-            GlobalVars.itemIsUsed = false;
-            items[GlobalVars.itemUsedIndex].SetActive(true);
-            GlobalVars.itemEffectDistance = itemsEffectDistanceList[GlobalVars.itemUsedIndex];
-            itemExistTime = 2;
-        }
+        //if (time % 5 == 0 && time < 60 && GlobalVars.itemUsedIndex == -1)
+        //{
+        //    GlobalVars.itemUsedIndex = (int)Random.Range(0, 2);
+        //    GlobalVars.itemIsUsed = false;
+        //    items[GlobalVars.itemUsedIndex].SetActive(true);
+        //    GlobalVars.itemEffectDistance = itemsEffectDistanceList[GlobalVars.itemUsedIndex];
+        //    itemExistTime = 2;
+        //}
         
-        if(GlobalVars.itemUsedIndex > -1){
-            //item is used.
-            if(GlobalVars.itemIsUsed)
-            {
-                items[GlobalVars.itemUsedIndex].transform.position = GlobalVars.cursorPosition;
-                if(GlobalVars.itemUsingTime > 0)
-                {
-                    GlobalVars.itemUsingTime -= Time.deltaTime;
-                }
-                else
-                {
-                    items[GlobalVars.itemUsedIndex].SetActive(false);
-                    GlobalVars.itemIsUsed = false;
-                    GlobalVars.itemEffectDistance = 0;
-                    GlobalVars.itemUsedIndex = -1;
-                }
-            }
-            //still didn't get item
-            else
-            {
-                if(itemExistTime > 0)
-                {
-                    itemExistTime -= Time.deltaTime;
-                }
-                //didn't get item, let it disappear
-                else
-                {
-                    items[GlobalVars.itemUsedIndex].SetActive(false);
-                    GlobalVars.itemIsUsed = false;
-                    GlobalVars.itemEffectDistance = 0;
-                    GlobalVars.itemUsedIndex = -1;
-                }
-            }
-        }
+        //if(GlobalVars.itemUsedIndex > -1){
+        //    //item is used.
+        //    if(GlobalVars.itemIsUsed)
+        //    {
+        //        items[GlobalVars.itemUsedIndex].transform.position = GlobalVars.cursorPosition;
+        //        if(GlobalVars.itemUsingTime > 0)
+        //        {
+        //            GlobalVars.itemUsingTime -= Time.deltaTime;
+        //        }
+        //        else
+        //        {
+        //            items[GlobalVars.itemUsedIndex].SetActive(false);
+        //            GlobalVars.itemIsUsed = false;
+        //            GlobalVars.itemEffectDistance = 0;
+        //            GlobalVars.itemUsedIndex = -1;
+        //        }
+        //    }
+        //    //still didn't get item
+        //    else
+        //    {
+        //        if(itemExistTime > 0)
+        //        {
+        //            itemExistTime -= Time.deltaTime;
+        //        }
+        //        //didn't get item, let it disappear
+        //        else
+        //        {
+        //            items[GlobalVars.itemUsedIndex].SetActive(false);
+        //            GlobalVars.itemIsUsed = false;
+        //            GlobalVars.itemEffectDistance = 0;
+        //            GlobalVars.itemUsedIndex = -1;
+        //        }
+        //    }
+        //}
     }
 
     public void Resume()//resume的功能
     {
+        Debug.Log("Resume 執行");
         count_down = 3;
         CountDownCanvas.GetComponent<CountDown>().SetCountDown(count_down);
         RestartButton.SetActive(false);
@@ -144,7 +141,7 @@ public class MainGameFunction : MonoBehaviour
     }
     public void Restart()//restart button的功能
     {
-        Debug.Log("Log");
+        Debug.Log("Restart 執行");
         GlobalVars.MainGameStop = 0;
         RestartButton.SetActive(false);
         QuitButton.SetActive(false);
