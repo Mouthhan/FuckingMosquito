@@ -84,6 +84,7 @@ public class Mosquito : MonoBehaviour
         scaleZ = transform.localScale.z;
         foo[0] = weeds;
         foo[1] = bloodBaby;
+        //Kill();
     }
 
     // Update is called once per frame
@@ -96,8 +97,8 @@ public class Mosquito : MonoBehaviour
         else if (!alive)
         {
             //yield return new WaitForSeconds(5);
-            deathAniLength -= Time.deltaTime;
-            if(deathAniLength < 0)
+            //deathAniLength -= Time.deltaTime;
+            if(m_animator.GetCurrentAnimatorStateInfo(0).IsName("new_die") &&   m_animator.GetCurrentAnimatorStateInfo(0).normalizedTime>1)
             {
                 Destroy(gameObject);
                 GameObject.Find("MosquitoGenerator").GetComponent<ManagerMosquito>().Destroy();
@@ -294,7 +295,9 @@ public class Mosquito : MonoBehaviour
         if (alive)
         {
             alive = false;
-            deathAniLength = 3;
+            //deathAniLength = 3;
+            m_animator.SetBool("isdie",true);
+            //deathAniLength = m_animator.GetCurrentAnimatorStateInfo(0).normalizedTime;
             //deathAniLength = m_animator
         }
        

@@ -33,8 +33,7 @@ public class PlayerController : MonoBehaviour
     Animator m_animator;
     AnimatorStateInfo stateInfo;
     List<GameObject> DestroyList = new List<GameObject>();
-    GameObject ActiveUIButton;
-    bool isHoldStartButton = false;
+    List<GameObject> ActiveUIButtonList = new List<GameObject>();
 
     static readonly bool DEBUG = false;
 
@@ -120,25 +119,24 @@ public class PlayerController : MonoBehaviour
                 m_animator.SetBool("handclosebool", true);
 
                 KillMosquito();
-
+                
                 Debug.Log("手關起來ㄌ");
-                if (ActiveUIButton != null)
+
+                if (ActiveUIButtonList.Count != 0)
                 {
-                    HandClickEvent e = ActiveUIButton.GetComponent<HandClickEvent>();
+                    // Only invoke first ActiveUIButton
+                    HandClickEvent e = ActiveUIButtonList[0].GetComponent<HandClickEvent>();
                     Debug.Log("觸發 UI_Button 事件");
                     e.onHandClick.Invoke();
                 }
-                //spriteRenderer.sprite = Resources.Load<Sprite>("newhandclose");
-                //transform.localScale = new Vector3(3, 3, 1);
+                ActiveUIButtonList.Clear();
             }
             else if (bodies[bodyID].HandRightState != Kinect.HandState.Closed && isHandRightClosed)
             {
                 isHandRightClosed = false;
 
                 m_animator.SetBool("handclosebool", false);
-
-                //spriteRenderer.sprite = Resources.Load<Sprite>("newhand");
-                //transform.localScale = new Vector3(0.5f, 0.5f, 1);
+                Debug.Log("手打開ㄌ");
             }
 
             if (bodies[bodyID].HandLeftState == Kinect.HandState.Closed && !isHandLeftClosed)
@@ -159,6 +157,8 @@ public class PlayerController : MonoBehaviour
     {
         foreach(GameObject obj in DestroyList)
         {
+            Animator anm;
+            anm = obj.GetComponent<Animator>();
             obj.GetComponent<Mosquito>().Kill();
             mainGameFunction.AddScore();
         }
@@ -188,7 +188,10 @@ public class PlayerController : MonoBehaviour
             Debug.Log("碰撞UI_Button");
             if (isHandRightClosed == false)
             {
-                ActiveUIButton = ColliderObj.gameObject;
+                if (!ActiveUIButtonList.Contains(ColliderObj.gameObject))
+                {
+                    ActiveUIButtonList.Add(ColliderObj.gameObject);
+                }
             }
         }
     }
@@ -200,8 +203,9 @@ public class PlayerController : MonoBehaviour
         {
             DestroyList.Remove(ColliderObj.gameObject);
         }
-   
-        ActiveUIButton = null;
-        isHoldStartButton = false;
+        else if (ColliderObj.gameObject.tag == "UI_Button")
+        {
+            ActiveUIButtonList.Remove(ColliderObj.gameObject);
+        }
     }
 }
