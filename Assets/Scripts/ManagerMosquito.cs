@@ -27,7 +27,7 @@ public class ManagerMosquito : MonoBehaviour
     {
         if (curMosquito < MaxMosquito)
         {
-            Instantiate(MosquitoExample, new Vector3(3, 3, 0), MosquitoExample.transform.rotation).SetActive(true);
+            Instantiate(MosquitoExample, new Vector3(GlobalVars.rand.Next(-7,7), GlobalVars.rand.Next(-4, 4), 0), MosquitoExample.transform.rotation).SetActive(true);
             curMosquito++;
         }
 

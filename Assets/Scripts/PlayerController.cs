@@ -35,7 +35,7 @@ public class PlayerController : MonoBehaviour
     List<GameObject> DestroyList = new List<GameObject>();
     List<GameObject> ActiveUIButtonList = new List<GameObject>();
 
-    static readonly bool DEBUG = false;
+    static readonly bool DEBUG = true;
 
     void Start()
     {
@@ -118,7 +118,7 @@ public class PlayerController : MonoBehaviour
 
                 m_animator.SetBool("handclosebool", true);
 
-                KillMosquito();
+               KillMosquito();
                 
                 Debug.Log("手關起來ㄌ");
 
@@ -155,7 +155,8 @@ public class PlayerController : MonoBehaviour
 
     public void KillMosquito()
     {
-        foreach(GameObject obj in DestroyList)
+        if (GlobalVars.MainGameStop == 1) return;
+        foreach (GameObject obj in DestroyList)
         {
             Animator anm;
             anm = obj.GetComponent<Animator>();
