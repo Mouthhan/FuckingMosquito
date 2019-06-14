@@ -66,6 +66,10 @@ public class Mosquito : MonoBehaviour
     //ManagerMosquito Dependencies.
     ManagerMosquito mosManager;
 
+
+    //Audios
+    public AudioClip DeadSqeeze;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -294,6 +298,7 @@ public class Mosquito : MonoBehaviour
     {
         if (alive)
         {
+            GetComponent<AudioSource>().PlayOneShot(DeadSqeeze);
             alive = false;
             //deathAniLength = 3;
             m_animator.SetBool("isdie",true);
