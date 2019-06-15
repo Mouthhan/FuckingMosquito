@@ -24,7 +24,7 @@ public class MainGameFunction : MonoBehaviour
     int score = 0;
 
     // 一回合的時間
-    const int gametime = 60;
+    const int gametime = 10;
 
     //item
     public GameObject[] items = new GameObject[10];
@@ -98,6 +98,7 @@ public class MainGameFunction : MonoBehaviour
         RestartButton.SetActive(false);
         QuitButton.SetActive(false);
         ResumeButton.SetActive(false);
+        OverText.SetActive(false);
 
         // Initialize
         time_f = 0f;
@@ -107,10 +108,7 @@ public class MainGameFunction : MonoBehaviour
         // Count Downs
         count_down = 3;
         CountDownScript.SetCountDown(count_down);
-
-        // StartGame
-        //GlobalVars.MainGameStop = 0;
-
+        
         // Reseting UI
         SetTime();
         SetScore();

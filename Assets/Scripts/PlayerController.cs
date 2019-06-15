@@ -9,13 +9,15 @@ public class PlayerController : MonoBehaviour
     public MainGameFunction mainGameFunction;
     public GameObject bodySourceManager;
     public GameObject background;
-    
+    public AudioSource money_bgm;
+    public AudioSource winey_bgm;
+
     BodySourceManager bodyManager;
 
     // Sprites
-    Sprite kingChina;
-    Sprite normalbackground;
+    Sprite winey;
     Sprite money;
+    Sprite normalBackground;
 
     Kinect.CoordinateMapper coordinate;
 
@@ -30,25 +32,27 @@ public class PlayerController : MonoBehaviour
     
     bool isHandRightClosed = false;
     bool isHandLeftClosed = false;
-    bool HandOnFace_China = false;
-    bool isnormalbackground = true;
-    bool isHandOnMoney = false;
+
     // Mouse Position
     Vector3 mousePos;
 
     //animator
     Animator m_animator;
     AnimatorStateInfo stateInfo;
+
     List<GameObject> DestroyList = new List<GameObject>();
     List<GameObject> ActiveUIButtonList = new List<GameObject>();
+    bool isHandOnWiney = false;
+    bool isHandOnMoney = false;
+    bool isNormalBackground = true;
 
     static readonly bool DEBUG = false;
 
     void Start()
     {
-        kingChina = Resources.Load<Sprite>("KingChina");
-        normalbackground = Resources.Load<Sprite>("normalbackground");
+        winey = Resources.Load<Sprite>("KingChina");
         money = Resources.Load<Sprite>("money");
+        normalBackground = Resources.Load<Sprite>("normalbackground");
 
         if (!DEBUG)
         {
@@ -140,17 +144,19 @@ public class PlayerController : MonoBehaviour
                 }
                 ActiveUIButtonList.Clear();
 
-                if (HandOnFace_China)
+                if (isHandOnWiney)
                 {
-                    isnormalbackground = false;
+                    isNormalBackground = false;
                     Debug.Log("換背景");
-                    background.GetComponent<SpriteRenderer>().sprite = kingChina;
+                    background.GetComponent<SpriteRenderer>().sprite = winey;
+                    winey_bgm.Play();
                 }
                 else if (isHandOnMoney)
                 {
-                    isnormalbackground = false;
+                    isNormalBackground = false;
                     Debug.Log("換背景");
                     background.GetComponent<SpriteRenderer>().sprite = money;
+                    money_bgm.Play();
                 }
             }
             else if (bodies[bodyID].HandRightState != Kinect.HandState.Closed && isHandRightClosed)
@@ -160,9 +166,9 @@ public class PlayerController : MonoBehaviour
                 m_animator.SetBool("handclosebool", false);
                 Debug.Log("右手打開ㄌ");
 
-                if (!isnormalbackground)
+                if (!isNormalBackground)
                 {
-                    background.GetComponent<SpriteRenderer>().sprite = normalbackground;
+                    background.GetComponent<SpriteRenderer>().sprite = normalBackground;
                 }
             }
 
@@ -221,10 +227,10 @@ public class PlayerController : MonoBehaviour
             }
         }
 
-        if(ColliderObj.gameObject.tag == "MasterOfChina")
+        if(ColliderObj.gameObject.tag == "winey")
         {
             Debug.Log("碰撞維尼");
-            HandOnFace_China = true;
+            isHandOnWiney = true;
         }
         else if (ColliderObj.gameObject.tag == "money")
         {
@@ -245,10 +251,10 @@ public class PlayerController : MonoBehaviour
             ActiveUIButtonList.Remove(ColliderObj.gameObject);
         }
 
-        if (ColliderObj.gameObject.tag == "MasterOfChina")
+        if (ColliderObj.gameObject.tag == "winey")
         {
             Debug.Log("離開維尼");
-            HandOnFace_China = false;
+            isHandOnWiney = false;
         }
         else if (ColliderObj.gameObject.tag == "money")
         {
