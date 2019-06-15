@@ -8,9 +8,14 @@ public class PlayerController : MonoBehaviour
     public static Vector3 position;
     public MainGameFunction mainGameFunction;
     public GameObject bodySourceManager;
-
-    SpriteRenderer spriteRenderer;
+    public GameObject background;
+    
     BodySourceManager bodyManager;
+
+    // Sprites
+    Sprite kingChina;
+    Sprite normalbackground;
+    Sprite money;
 
     Kinect.CoordinateMapper coordinate;
 
@@ -25,7 +30,9 @@ public class PlayerController : MonoBehaviour
     
     bool isHandRightClosed = false;
     bool isHandLeftClosed = false;
-
+    bool HandOnFace_China = false;
+    bool isnormalbackground = true;
+    bool isHandOnMoney = false;
     // Mouse Position
     Vector3 mousePos;
 
@@ -39,8 +46,10 @@ public class PlayerController : MonoBehaviour
 
     void Start()
     {
-        spriteRenderer = GetComponent<SpriteRenderer>();
-        
+        kingChina = Resources.Load<Sprite>("KingChina");
+        normalbackground = Resources.Load<Sprite>("normalbackground");
+        money = Resources.Load<Sprite>("money");
+
         if (!DEBUG)
         {
             // If there hasn't assigned BodySourceManager, byebye
@@ -130,6 +139,19 @@ public class PlayerController : MonoBehaviour
                     e.onHandClick.Invoke();
                 }
                 ActiveUIButtonList.Clear();
+
+                if (HandOnFace_China)
+                {
+                    isnormalbackground = false;
+                    Debug.Log("換背景");
+                    background.GetComponent<SpriteRenderer>().sprite = kingChina;
+                }
+                else if (isHandOnMoney)
+                {
+                    isnormalbackground = false;
+                    Debug.Log("換背景");
+                    background.GetComponent<SpriteRenderer>().sprite = money;
+                }
             }
             else if (bodies[bodyID].HandRightState != Kinect.HandState.Closed && isHandRightClosed)
             {
@@ -137,6 +159,11 @@ public class PlayerController : MonoBehaviour
 
                 m_animator.SetBool("handclosebool", false);
                 Debug.Log("右手打開ㄌ");
+
+                if (!isnormalbackground)
+                {
+                    background.GetComponent<SpriteRenderer>().sprite = normalbackground;
+                }
             }
 
             if (bodies[bodyID].HandLeftState == Kinect.HandState.Closed && !isHandLeftClosed)
@@ -199,6 +226,17 @@ public class PlayerController : MonoBehaviour
                 }
             }
         }
+
+        if(ColliderObj.gameObject.tag == "MasterOfChina")
+        {
+            Debug.Log("碰撞維尼");
+            HandOnFace_China = true;
+        }
+        else if (ColliderObj.gameObject.tag == "money")
+        {
+            Debug.Log("碰撞money");
+            isHandOnMoney = true;
+        }
     }
 
     void OnTriggerExit2D(Collider2D ColliderObj)
@@ -211,6 +249,17 @@ public class PlayerController : MonoBehaviour
         else if (ColliderObj.gameObject.tag == "UI_Button")
         {
             ActiveUIButtonList.Remove(ColliderObj.gameObject);
+        }
+
+        if (ColliderObj.gameObject.tag == "MasterOfChina")
+        {
+            Debug.Log("離開維尼");
+            HandOnFace_China = false;
+        }
+        else if (ColliderObj.gameObject.tag == "money")
+        {
+            Debug.Log("碰撞money");
+            isHandOnMoney = false;
         }
     }
 }

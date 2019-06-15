@@ -8,6 +8,8 @@ TagManager:
   - Mosquito
   - UI_Button
   - startbutton
+  - MasterOfChina
+  - money
   layers:
   - Default
   - TransparentFX
