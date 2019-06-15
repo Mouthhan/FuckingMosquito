@@ -1,0 +1,23 @@
+fileFormatVersion: 2
+guid: fbe96192fd05a1948b8d16d85f656309
+TrueTypeFontImporter:
+  externalObjects: {}
+  serializedVersion: 4
+  fontSize: 16
+  forceTextureCase: -2
+  characterSpacing: 0
+  characterPadding: 1
+  includeFontData: 1
+  fontName: Metrool
+  fontNames:
+  - Metrool
+  fallbackFontReferences:
+  - {fileID: 12800000, guid: a00c1ad5409ef6a458f2d2e6e12a383a, type: 3}
+  customCharacters: 
+  fontRenderingMode: 0
+  ascentCalculationMode: 1
+  useLegacyBoundsCalculation: 0
+  shouldRoundAdvanceValue: 1
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
