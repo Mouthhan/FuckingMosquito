@@ -42,7 +42,7 @@ public class PlayerController : MonoBehaviour
     List<GameObject> DestroyList = new List<GameObject>();
     List<GameObject> ActiveUIButtonList = new List<GameObject>();
 
-    static readonly bool DEBUG = true;
+    static readonly bool DEBUG = false;
 
     void Start()
     {
