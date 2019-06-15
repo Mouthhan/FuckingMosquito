@@ -300,10 +300,7 @@ public class Mosquito : MonoBehaviour
         {
             GetComponent<AudioSource>().PlayOneShot(DeadSqeeze);
             alive = false;
-            //deathAniLength = 3;
             m_animator.SetBool("isdie",true);
-            //deathAniLength = m_animator.GetCurrentAnimatorStateInfo(0).normalizedTime;
-            //deathAniLength = m_animator
         }
        
     }
