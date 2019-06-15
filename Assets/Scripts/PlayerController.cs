@@ -35,7 +35,7 @@ public class PlayerController : MonoBehaviour
     List<GameObject> DestroyList = new List<GameObject>();
     List<GameObject> ActiveUIButtonList = new List<GameObject>();
 
-    static readonly bool DEBUG = true;
+    static readonly bool DEBUG = false;
 
     void Start()
     {
@@ -120,7 +120,7 @@ public class PlayerController : MonoBehaviour
 
                KillMosquito();
                 
-                Debug.Log("手關起來ㄌ");
+                Debug.Log("右手關起來ㄌ");
 
                 if (ActiveUIButtonList.Count != 0)
                 {
@@ -136,12 +136,16 @@ public class PlayerController : MonoBehaviour
                 isHandRightClosed = false;
 
                 m_animator.SetBool("handclosebool", false);
-                Debug.Log("手打開ㄌ");
+                Debug.Log("右手打開ㄌ");
             }
 
             if (bodies[bodyID].HandLeftState == Kinect.HandState.Closed && !isHandLeftClosed)
             {
                 isHandLeftClosed = true;
+                
+                // 左手關閉表示進入 stop
+                if(GlobalVars.MainGameStop != 1)
+                    mainGameFunction.Stop();
             }
             else if (bodies[bodyID].HandLeftState != Kinect.HandState.Closed && isHandLeftClosed)
             {

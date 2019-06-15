@@ -23,12 +23,14 @@ public class MainGameFunction : MonoBehaviour
     float count_down = 0;
     int score = 0;
 
+    // 一回合的時間
+    const int gametime = 60;
+
     //item
     public GameObject[] items = new GameObject[10];
     public double[] itemsEffectDistanceList = new double[10];
     public int[] itemsEffectTime = new int[10];
     public double itemExistTime = 0;
-    //public double itemUsingTime = 0;
      
     // Start is called before the first frame update
     void Start()
@@ -41,11 +43,6 @@ public class MainGameFunction : MonoBehaviour
 
 
         CountDownScript = CountDownCanvas.GetComponent<CountDown>();
-        ////initialize item effect
-        //itemsEffectDistanceList[0] = 3;
-        //itemsEffectDistanceList[1] = 10;
-        //items[0].SetActive(false);
-        //items[1].SetActive(false);
     }
 
 
@@ -66,17 +63,13 @@ public class MainGameFunction : MonoBehaviour
         }
         else if (Input.GetKeyDown(KeyCode.Escape))
         {
-            RestartButton.SetActive(true);
-            QuitButton.SetActive(true);
-            ResumeButton.SetActive(true);
-            GlobalVars.MainGameStop = 1;
+            Stop();
         }
        else if (GlobalVars.MainGameStop == 0)
         {
             time_f += Time.deltaTime;
-            time = 10 - (int)time_f;
+            time = gametime - (int)time_f;
             SetTime();
-            // AddScore();
         }
         if (time == 0)
         {
@@ -105,17 +98,31 @@ public class MainGameFunction : MonoBehaviour
         RestartButton.SetActive(false);
         QuitButton.SetActive(false);
         ResumeButton.SetActive(false);
-        //Initialize
+
+        // Initialize
         time_f = 0f;
-        time = 0;
+        time = gametime;
         score = 0;
-        //Count Downs
+
+        // Count Downs
         count_down = 3;
-        CountDownCanvas.GetComponent<CountDown>().SetCountDown(count_down);
-        //StartGame
+        CountDownScript.SetCountDown(count_down);
+
+        // StartGame
         //GlobalVars.MainGameStop = 0;
+
+        // Reseting UI
+        SetTime();
+        SetScore();
     }
 
+    public void Stop()
+    {
+        RestartButton.SetActive(true);
+        QuitButton.SetActive(true);
+        ResumeButton.SetActive(true);
+        GlobalVars.MainGameStop = 1;
+    }
 
     public void SetTime()//時間
     {
@@ -126,6 +133,11 @@ public class MainGameFunction : MonoBehaviour
             TextTime.color = Color.red;
         }
         TextTime.text = time.ToString();
+    }
+
+    void SetScore()
+    {
+        TextScore.text = score.ToString();
     }
 
     public void AddScore()//加分
