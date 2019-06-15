@@ -6,7 +6,7 @@ public class itemScript : MonoBehaviour
 {
     public double effectDistance;
     public double effectTime;
-    public AudioClip[] clips;
+    public AudioClip clip;
     // Start is called before the first frame update
     void Start()
     {
@@ -23,10 +23,7 @@ public class itemScript : MonoBehaviour
     {
         if (ColliderObj.gameObject.name == "newhand")
         {
-            if(GlobalVars.itemUsedIndex == 0)
-            {
-                GetComponent<AudioSource>().PlayOneShot(clips[GlobalVars.itemUsedIndex]);
-            }
+            GetComponent<AudioSource>().PlayOneShot(clip);
             
             GlobalVars.itemIsUsed = true;
             GlobalVars.itemEffectDistance = effectDistance;

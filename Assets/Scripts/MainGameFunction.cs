@@ -31,6 +31,9 @@ public class MainGameFunction : MonoBehaviour
     public double[] itemsEffectDistanceList = new double[10];
     public int[] itemsEffectTime = new int[10];
     public double itemExistTime = 0;
+
+    // Audio
+    AudioSource audio_quickly;
      
     // Start is called before the first frame update
     void Start()
@@ -40,11 +43,12 @@ public class MainGameFunction : MonoBehaviour
         RestartButton.SetActive(false);
         QuitButton.SetActive(false);
         ResumeButton.SetActive(false);
+
+        audio_quickly = GetComponent<AudioSource>();
         
         CountDownScript = CountDownCanvas.GetComponent<CountDown>();
     }
-
-
+    
     // Update is called once per frame
     void Update()
     {
@@ -88,6 +92,9 @@ public class MainGameFunction : MonoBehaviour
         RestartButton.SetActive(false);
         QuitButton.SetActive(false);
         ResumeButton.SetActive(false);
+
+        // audio
+        audio_quickly.Pause();
     }
 
 
@@ -111,6 +118,9 @@ public class MainGameFunction : MonoBehaviour
         // Reseting UI
         SetTime();
         SetScore();
+
+        // audio
+        audio_quickly.Pause();
     }
 
     public void Stop()
@@ -119,6 +129,9 @@ public class MainGameFunction : MonoBehaviour
         QuitButton.SetActive(true);
         ResumeButton.SetActive(true);
         GlobalVars.MainGameStop = 1;
+
+        // audio
+        audio_quickly.Play();
     }
 
     public void SetTime()//時間

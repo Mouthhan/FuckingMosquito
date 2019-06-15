@@ -28,7 +28,7 @@ public class ItemController : MonoBehaviour
     {
         time = scriptName.time;
         //item appear.
-        if (time % appearTime == 0 && time > 0 && time < 60 && GlobalVars.itemUsedIndex == -1)
+        if (time % appearTime == 0 && time > 0 && time < 60 && GlobalVars.itemUsedIndex == -1 && GlobalVars.MainGameStop == 0)
         {
             GlobalVars.itemUsedIndex = (int)Random.Range(0.5F, 1.5F);
             GlobalVars.itemIsUsed = false;
