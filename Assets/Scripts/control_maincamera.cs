@@ -13,6 +13,7 @@ public class control_maincamera : MonoBehaviour
     public Component button1;
     public GameObject background;
     public UnityEngine.UI.Button button;
+    public AudioSource audioSource;
     // Start is called before the first frame update
     bool flag;
     void Start()
@@ -37,18 +38,21 @@ public class control_maincamera : MonoBehaviour
         {
           mos.SetActive(false);
           start_button.SetActive(false);
-            background.SetActive(false);
-            flag = true;
+          background.SetActive(false);
+         flag = true;
         }
         if (!video.isPlaying)
         {
             mos.SetActive(true);
             start_button.SetActive(true);
             background.SetActive(true);
+            
         }
         if (flag && !video.isPlaying)
         {
             video.targetCameraAlpha = 0.0f;
+            if(!audioSource.isPlaying)
+              audioSource.Play();
         }
     }
     void CheckOver(UnityEngine.Video.VideoPlayer video)

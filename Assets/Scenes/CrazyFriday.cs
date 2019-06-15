@@ -19,7 +19,8 @@ public class CrazyFriday : MonoBehaviour
         {
             for(int j=0;j<700;j++)
             {
-                transform.rotation = Quaternion.Euler(0, 0, i);
+                if (j % 5 == 0)
+                    transform.rotation = Quaternion.Euler(0, 0, i);
             }
             flag = 1;
         }
@@ -28,7 +29,8 @@ public class CrazyFriday : MonoBehaviour
             i *= -1;
             for (int j = 0; j < 700; j++)
             {
-                transform.rotation = Quaternion.Euler(0, 0, i);
+                if(j%5==0)
+                    transform.rotation = Quaternion.Euler(0, 0, i);
             }
             i *= -1;
             flag = 0;
