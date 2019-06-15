@@ -8,6 +8,7 @@ public class MenuPlayerController : MonoBehaviour
     public static Vector3 position;
     public GameObject bodySourceManager;
     public Button StartButton;
+    public GameObject hint;
 
     SpriteRenderer spriteRenderer;
     BodySourceManager bodyManager;
@@ -38,6 +39,7 @@ public class MenuPlayerController : MonoBehaviour
 
     void Start()
     {
+        hint.SetActive(false);
         spriteRenderer = GetComponent<SpriteRenderer>();
 
         if (!DEBUG)
@@ -149,10 +151,20 @@ public class MenuPlayerController : MonoBehaviour
             Debug.Log("碰撞");
             isHoldStartButton = true;
         }
+
+        if (ColliderObj.gameObject.tag == "hint")
+        {
+            hint.SetActive(true);
+        }
     }
 
     void OnTriggerExit2D(Collider2D ColliderObj)
     {
         isHoldStartButton = false;
+
+        if (ColliderObj.gameObject.tag == "hint")
+        {
+            hint.SetActive(false);
+        }
     }
 }

@@ -10,6 +10,7 @@ TagManager:
   - startbutton
   - money
   - winey
+  - hint
   layers:
   - Default
   - TransparentFX
