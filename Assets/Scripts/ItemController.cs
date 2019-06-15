@@ -7,21 +7,20 @@ public class ItemController : MonoBehaviour
     // Start is called before the first frame update
 
     public GameObject[] items = new GameObject[10];
-    public double[] itemsEffectDistanceList = new double[10];
-    public int[] itemsEffectTime = new int[10];
     public double itemExistTime = 0;
 
     private MainGameFunction scriptName;
     private int time = -1;
-    private float randRangeX = 10, randRangeY = 5;  
+    private float randRangeX = 7F, randRangeY = 3.5F;
+
+    private int appearTime = 5;
 
     void Start()
     {
         scriptName = GameObject.Find("MainGameObj").GetComponent<MainGameFunction>();
-        itemsEffectDistanceList[0] = 3;
-        itemsEffectDistanceList[1] = 10;
         items[0].SetActive(false);
         items[1].SetActive(false);
+
     }
 
     // Update is called once per frame
@@ -29,13 +28,12 @@ public class ItemController : MonoBehaviour
     {
         time = scriptName.time;
         //item appear.
-        if (time % 5 == 0 && time < 60 && GlobalVars.itemUsedIndex == -1)
+        if (time % appearTime == 0 && time > 0 && time < 60 && GlobalVars.itemUsedIndex == -1)
         {
             GlobalVars.itemUsedIndex = (int)Random.Range(0.5F, 1.5F);
             GlobalVars.itemIsUsed = false;
             items[GlobalVars.itemUsedIndex].transform.position = new Vector2(Random.Range(-randRangeX, randRangeX + 1), Random.Range(-randRangeY, randRangeY + 1));
             items[GlobalVars.itemUsedIndex].SetActive(true);
-            GlobalVars.itemEffectDistance = itemsEffectDistanceList[GlobalVars.itemUsedIndex];
             itemExistTime = 2;
         }
         

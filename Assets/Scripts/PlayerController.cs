@@ -42,7 +42,7 @@ public class PlayerController : MonoBehaviour
     List<GameObject> DestroyList = new List<GameObject>();
     List<GameObject> ActiveUIButtonList = new List<GameObject>();
 
-    static readonly bool DEBUG = false;
+    static readonly bool DEBUG = true;
 
     void Start()
     {
@@ -199,13 +199,7 @@ public class PlayerController : MonoBehaviour
 
     void OnTriggerEnter2D(Collider2D ColliderObj)
     {
-        if (ColliderObj.gameObject.tag == "item")
-        {
-            GlobalVars.itemIsUsed = true;
-            GlobalVars.itemEffectDistance = 3;
-            GlobalVars.itemUsingTime = 2;
-        }
-        else if (ColliderObj.gameObject.tag == "Mosquito")
+        if (ColliderObj.gameObject.tag == "Mosquito")
         {
             if (isHandRightClosed == false)
             {

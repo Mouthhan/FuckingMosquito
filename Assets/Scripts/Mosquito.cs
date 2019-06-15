@@ -21,7 +21,7 @@ public class Mosquito : MonoBehaviour
     private double deltaSpeed = 0F;
     private double newSpeed = 0F;
     private double baseSpeed = 0.1F;
-    private double maxSpeed = 20F;
+    private double maxSpeed = 15F;
     private double straightSpScaler = 30F;
     private double rotateSpScaler = 15F;
     private double maxAngleSpeed = 20F; //Test Purpose
@@ -49,7 +49,7 @@ public class Mosquito : MonoBehaviour
     //Dangerous Dependencies
     private Vector3 lastCursorPosition = new Vector3(1000,1000, 10);
     private Vector3 cursor;
-    private double dangerous3Position = 3;
+    private double dangerous3Position = 2;
     private double distance;
     private bool lastDangerous;
 
@@ -88,6 +88,7 @@ public class Mosquito : MonoBehaviour
         scaleZ = transform.localScale.z;
         foo[0] = weeds;
         foo[1] = bloodBaby;
+        lastDangerous = false;
         //Kill();
     }
 
@@ -115,8 +116,6 @@ public class Mosquito : MonoBehaviour
 
             direction = CheckRadias(direction + deltadir);
 
-
-
             //Movement
             x = transform.position.x;
             y = transform.position.y;
@@ -143,6 +142,7 @@ public class Mosquito : MonoBehaviour
 
             if (GlobalVars.itemUsedIndex > -1 && GlobalVars.itemIsUsed && inItemEffectDistance())
             {
+                Debug.Log("what?");
                 foo[GlobalVars.itemUsedIndex]();
             }
             else if (isDangerous3())
@@ -194,7 +194,7 @@ public class Mosquito : MonoBehaviour
         }
         return rad;
     }
-
+ 
     private void GoCenterBehavior()
     {
         moveDuration = 0.1;
@@ -249,42 +249,30 @@ public class Mosquito : MonoBehaviour
 
     void ChangeToNormal()
     {
-        speed /= 1.3f;
         m_animator.SetBool("normal", true);
     }
 
     void ChangeToDangerous3()
     {
-        AccuTime = 0;
-        speed *= 1.3f;
-        Vector2 transToCursor = new Vector2(transform.position.x - cursor.x, transform.position.y - cursor.y);
-        Vector2 dir = new Vector2(Mathf.Cos((float)direction), Mathf.Sin((float)direction));
-        deltadir = Vector2.SignedAngle(dir, transToCursor + dir) / 180 * PI / 30;
-        deltadeltadir = 0;
         m_animator.SetBool("normal", false);
     }
 
     bool isDangerous3()
     {
-        cursor = PlayerController.position ;
-        cursor.z = 20;
-        //cursor = Camera.main.ScreenToWorldPoint(cursor);
         Vector3 pos = transform.position;
-        pos.z = 20;
-        distance = Math.Sqrt(Math.Pow(cursor.x - pos.x, 2) + Math.Pow((cursor.y - pos.y), 2));
-        double lastDistance = Math.Sqrt(Math.Pow(lastCursorPosition.x - pos.x, 2) + Math.Pow((lastCursorPosition.y - pos.y), 2));
-        lastCursorPosition = cursor;
-
-        //if (distance < dangerous3Position && distance < lastDistance)
-        //    return true;
-        if (distance < dangerous3Position)
+        distance = Math.Sqrt(Math.Pow(GlobalVars.cursorPosition.x - pos.x, 2) + Math.Pow((GlobalVars.cursorPosition.y - pos.y), 2));
+        double lastDistance = Math.Sqrt(Math.Pow(GlobalVars.lastCursorPosition.x - pos.x, 2) + Math.Pow((GlobalVars.lastCursorPosition.y - pos.y), 2));
+        
+        if (distance < dangerous3Position && distance < lastDistance)
+        {
             return true;
-
+        }
         return false;
     }
 
     void dangerous3()
     {
+        AccuTime = 0;
         Vector2 transToCursor = new Vector2(transform.position.x - GlobalVars.cursorPosition.x, transform.position.y - GlobalVars.cursorPosition.y);
         Vector2 dir = new Vector2(Mathf.Cos((float)direction), Mathf.Sin((float)direction));
         double n = dangerous3Position - transToCursor.magnitude;
@@ -316,7 +304,7 @@ public class Mosquito : MonoBehaviour
         Vector2 dir = new Vector2(Mathf.Cos((float)direction), Mathf.Sin((float)direction));
         double n = (GlobalVars.itemEffectDistance - transToCursor.magnitude) / 5.0;
         direction = Vector2.SignedAngle(new Vector2(1, 0), dir + transToCursor * (float)n) / 180 * PI;
-        if (speed < 2) speed = 2;
+        if (speed < 1) speed = 1;
         deltadir = 0;
         deltadeltadir = 0;
     }
